@@ -14,16 +14,16 @@ function Logo({ mode, size, href, className }: ILogoProps) {
   return (
     <a
       href={href}
-      className={classNames(className, classes.logo, classes.small, {
+      className={classNames(className, classes.logo, {
         [classes.primary]: mode === "primary",
-        [classes.small]: size === "small",
+        [classes.small]: size === "small" || !size,
         [classes.medium]: size === "medium",
       })}
     >
       <Cricle />
       <Plane
         className={classNames(className, classes.plane, classes.small, {
-          [classes.small]: size === "small",
+          [classes.small]: size === "small" || !size,
           [classes.medium]: size === "medium",
         })}
       />
