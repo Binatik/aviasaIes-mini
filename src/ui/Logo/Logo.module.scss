@@ -1,0 +1,50 @@
+@mixin styleLogo($size) {
+  .primary.small.logo {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: $size;
+    height: $size;
+    border-radius: 50%;
+    transition:
+      transform 0.2s,
+      box-shadow 0.2s;
+    box-shadow: 0px 1px 11px 0px rgba(55, 104, 142, 0.3);
+  }
+
+  .primary.medium.logo {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: $size + 30;
+    height: $size + 30;
+    border-radius: 50%;
+    transition:
+      transform 0.2s,
+      box-shadow 0.2s;
+    box-shadow: 0px 1px 11px 0px rgba(55, 104, 142, 0.3);
+  }
+
+  .small.plane {
+    flex-shrink: 0;
+    position: absolute;
+    width: $size - 0.15;
+  }
+
+  .medium.plane {
+    flex-shrink: 0;
+    position: absolute;
+    width: $size + 20;
+  }
+
+  @media (hover: hover) {
+    .primary.logo:hover {
+      transform: translateY(-1px);
+      box-shadow: 0px 20px 11px 0px rgba(55, 104, 142, 0.3);
+    }
+  }
+}
+
+@include styleLogo(60px);

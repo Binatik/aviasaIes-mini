@@ -1,0 +1,16 @@
+$main-background: #f3f7fa;
+$container: 960px;
+
+body {
+  background: $main-background;
+}
+
+.header {
+  margin: 50px auto;
+
+  &__container {
+    text-align: center;
+    max-width: $container;
+    margin: 50px auto;
+  }
+}
