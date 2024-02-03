@@ -1,4 +1,4 @@
-import { HTMLAttributes } from "react";
+import { AnchorHTMLAttributes } from "react";
 import { ReactComponent as Cricle } from "../../assets/icons/cricle.svg";
 import { ReactComponent as Plane } from "../../assets/icons/plane.svg";
 import classes from "./Logo.module.scss";
@@ -7,13 +7,12 @@ import classNames from "classnames";
 type ILogoProps = {
   mode: "primary";
   size?: "small" | "medium";
-  href: string;
-} & HTMLAttributes<HTMLElement>;
+} & AnchorHTMLAttributes<HTMLAnchorElement>;
 
-function Logo({ mode, size, href, className }: ILogoProps) {
+function Logo({ mode, size, className, ...props }: ILogoProps) {
   return (
     <a
-      href={href}
+      {...props}
       className={classNames(className, classes.logo, {
         [classes.primary]: mode === "primary",
         [classes.small]: size === "small" || !size,
