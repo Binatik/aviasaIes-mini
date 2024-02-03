@@ -1,0 +1,42 @@
+//Расчет от базового шаблона в 16px
+@mixin calculateTextSize($fontSizePx, $lineHeightPx) {
+  $fontSizeRem: calc($fontSizePx / 16px);
+  $lineHeightRem: calc($lineHeightPx / 16px);
+
+  font-size: #{$fontSizeRem}rem;
+  line-height: #{$lineHeightRem}rem;
+}
+
+.button {
+  cursor: pointer;
+  font-weight: 600;
+  text-transform: uppercase;
+  border: none;
+  letter-spacing: 0.5px;
+  @include calculateTextSize(12px, 20px);
+}
+
+.button.wide {
+  flex-grow: 1;
+}
+
+.button.primaryMode {
+  color: var(--default-color);
+  background-color: var(--base-color);
+  transition:
+    color 0.1s,
+    background-color 0.1s;
+}
+
+.button.primaryMode.activeType {
+  cursor: default;
+  background-color: var(--main-background-color);
+  color: var(--base-color);
+}
+
+@media (hover: hover) {
+  .button.primaryMode:hover {
+    background-color: var(--main-background-color);
+    color: var(--base-color);
+  }
+}

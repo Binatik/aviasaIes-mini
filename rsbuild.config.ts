@@ -4,6 +4,10 @@ import { pluginSvgr } from '@rsbuild/plugin-svgr';
 import ESLintPlugin from 'eslint-webpack-plugin';
 
 export default defineConfig({
+  html: {
+    title: 'AviasaIes-mini',
+    favicon: './src/assets/icon.png',
+  },
   plugins: [pluginReact(), pluginSvgr()],
   tools: {
     bundlerChain(chain) {

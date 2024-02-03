@@ -1,8 +1,26 @@
-$main-background: #f3f7fa;
-$container: 960px;
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&display=swap");
+
+:root {
+  --container: 960px;
+  --familyOpen: "Open Sans", sans-serif;
+}
+
+html[data-theme="light"] {
+  // main Color light
+  --background: #f3f7fa;
+  --base-color: #ffffff;
+  --default-color: #4a4a4a;
+  --main-background-color: #2196f3;
+  --success-color: #a0b0b9;
+  --primary-color: #2196f3;
+
+  // hover Color light
+  --hover-primary: #2196f3;
+}
 
 body {
-  background: $main-background;
+  font-family: var(--familyOpen);
+  background: var(--background);
 }
 
 .header {
@@ -10,7 +28,26 @@ body {
 
   &__container {
     text-align: center;
-    max-width: $container;
+    max-width: var(--container);
     margin: 50px auto;
+    padding: 0 20px;
   }
+}
+
+.box__container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.box__sort {
+  display: flex;
+  outline: 1px solid rgb(223, 229, 236);
+  border-radius: 5px;
+  gap: 1.5px;
+  overflow: hidden;
+}
+
+.box__sort button {
+  padding: 15px;
 }

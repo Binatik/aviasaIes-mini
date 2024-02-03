@@ -14,16 +14,16 @@ function Logo({ mode, size, className, ...props }: ILogoProps) {
     <a
       {...props}
       className={classNames(className, classes.logo, {
-        [classes.primary]: mode === "primary",
-        [classes.small]: size === "small" || !size,
-        [classes.medium]: size === "medium",
+        [classes.primaryMode]: mode === "primary",
+        [classes.smallSize]: size === "small" || !size,
+        [classes.mediumSize]: size === "medium",
       })}
     >
       <Cricle />
       <Plane
-        className={classNames(className, classes.plane, classes.small, {
-          [classes.small]: size === "small" || !size,
-          [classes.medium]: size === "medium",
+        className={classNames(className, classes.plane, {
+          [classes.smallSize]: size === "small" || !size,
+          [classes.mediumSize]: size === "medium",
         })}
       />
     </a>
