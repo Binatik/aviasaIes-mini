@@ -6,3 +6,10 @@
   margin: 0 auto;
   padding: 0 20px;
 }
+
+@media (min-width: 768px) {
+  .aviasalesContainer {
+    flex-wrap: nowrap;
+    flex-direction: row;
+  }
+}

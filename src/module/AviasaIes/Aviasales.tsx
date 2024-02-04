@@ -1,5 +1,5 @@
-import { AviasalesFilter } from "./AviasalesFilter/AviasalesFilter"
-import { AviasalesSort } from "./AviasalesSort/AviasalesSort"
+import { AviasalesFilter } from "./AviasalesFilter/AviasalesFilter";
+import { AviasalesSort } from "./AviasalesSort/AviasalesSort";
 import classes from "./Aviasales.module.scss";
 
 function Aviasales() {
@@ -8,7 +8,7 @@ function Aviasales() {
       <AviasalesFilter />
       <AviasalesSort />
     </div>
-  )
+  );
 }
 
-export { Aviasales }
+export { Aviasales };

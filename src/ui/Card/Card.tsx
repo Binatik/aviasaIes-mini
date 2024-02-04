@@ -4,18 +4,22 @@ import { HTMLAttributes } from "react";
 
 type ICardProps = {
   mode: "primary";
-  size?: "small" | "medium";
+  size?: "small" | "medium" | "none";
   children: React.ReactNode;
-} & HTMLAttributes<HTMLDivElement>
+} & HTMLAttributes<HTMLDivElement>;
 
 function Card({ mode, size, children, className }: ICardProps) {
   return (
-    <div className={classNames(className, classes.card, {
-      [classes.primaryMode]: mode === "primary",
-      [classes.smallSize]: size === "small" || !size,
-      [classes.mediumSize]: size === "medium",
-    })}>{children}</div>
-  )
+    <div
+      className={classNames(className, classes.card, {
+        [classes.primaryMode]: mode === "primary",
+        [classes.smallSize]: size === "small" || !size,
+        [classes.mediumSize]: size === "medium",
+      })}
+    >
+      {children}
+    </div>
+  );
 }
 
-export { Card }
+export { Card };

@@ -1,0 +1,35 @@
+//Расчет от базового шаблона в 16px
+@mixin calculateTextSize($fontSizePx, $lineHeightPx) {
+  $fontSizeRem: calc($fontSizePx / 16px);
+  $lineHeightRem: calc($lineHeightPx / 16px);
+
+  font-size: #{$fontSizeRem}rem;
+  line-height: #{$lineHeightRem}rem;
+}
+
+.paragraph {
+  margin: 0;
+  display: inline-block;
+}
+
+.paragraph.primaryMode {
+  color: var(--default-color);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.paragraph.successMode {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.paragraph.smallSize {
+  @include calculateTextSize(12px, 20px);
+}
+
+.paragraph.mediumSize {
+  @include calculateTextSize(24px, 24px);
+}

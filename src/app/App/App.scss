@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&display=swap");
 
+* {
+  box-sizing: border-box;
+}
+
 :root {
   --tableWidth: 768px;
   // --phoneWidth: 576px;
@@ -20,11 +24,19 @@ html[data-theme="light"] {
 
   // hover Color light
   --hover-primary: #2196f3;
+  --hover-success: #f1fcff;
+
+  // border Color
+  --border-base: #9abbce;
 }
 
 body {
   font-family: var(--familyOpen);
   background: var(--background);
+}
+
+h2 {
+  margin: 0;
 }
 
 .header {

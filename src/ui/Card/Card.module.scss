@@ -1,6 +1,5 @@
-.card  {
+.card {
   display: flex;
-  flex-grow: 1;
   flex-direction: column;
   align-items: self-start;
 }
@@ -17,10 +16,4 @@
 
 .card.primaryMode.mediumSize {
   padding: 26px;
-}
-
-@media (min-width: 576px) {
-  .card  {
-    flex-grow: 0;
-  }
 }

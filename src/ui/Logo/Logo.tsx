@@ -15,6 +15,7 @@ function Logo({ mode, size, className, ...props }: ILogoProps) {
       {...props}
       className={classNames(className, classes.logo, {
         [classes.primaryMode]: mode === "primary",
+        [classes.primaryMode]: mode === "primary",
         [classes.smallSize]: size === "small" || !size,
         [classes.mediumSize]: size === "medium",
       })}

@@ -1,15 +1,29 @@
 .aviasalesSort {
+  flex: 1;
+}
+
+.aviasalesSortContainer {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
   outline: 1px solid rgb(223, 229, 236);
   border-radius: var(--border-main);
   gap: 1.5px;
   overflow: hidden;
 }
 
-@media (min-width: 576px) {
-  .aviasalesSort {
+.aviasalesContent {
+  padding-top: 20px;
+}
+
+.aviasalesItem {
+  align-self: stretch;
+  gap: 0 20px;
+  justify-content: space-between;
+  display: flex;
+}
+
+@media (min-width: 768px) {
+  .aviasalesSortContainer {
     flex-direction: row;
   }
 }
