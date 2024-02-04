@@ -1,0 +1,8 @@
+.aviasalesContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 20px;
+}

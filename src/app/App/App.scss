@@ -1,7 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&display=swap");
 
 :root {
+  --tableWidth: 768px;
+  // --phoneWidth: 576px;
+
   --container: 960px;
+  --border-main: 5px;
   --familyOpen: "Open Sans", sans-serif;
 }
 
@@ -32,22 +36,4 @@ body {
     margin: 50px auto;
     padding: 0 20px;
   }
-}
-
-.box__container {
-  max-width: var(--container);
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.box__sort {
-  display: flex;
-  outline: 1px solid rgb(223, 229, 236);
-  border-radius: 5px;
-  gap: 1.5px;
-  overflow: hidden;
-}
-
-.box__sort button {
-  padding: 15px;
 }

@@ -1,6 +1,6 @@
 import { Logo } from "../../ui/Logo/Logo";
-import { Button } from "../../ui/Button/Button";
 import { useTheme } from "../../hooks/useTheme";
+import { Aviasales } from "../../module/AviasaIes/Aviasales";
 import "normalize.css";
 import "./App.scss";
 
@@ -15,19 +15,7 @@ const App = () => {
         </div>
       </header>
       <main>
-        <div className="box__container">
-          <div className="box__sort">
-            <Button mode="primary" wide type="active" disabled>
-              Самый дешевый
-            </Button>
-            <Button mode="primary" wide>
-              Самый быстрый
-            </Button>
-            <Button mode="primary" wide>
-              Оптимальный
-            </Button>
-          </div>
-        </div>
+        <Aviasales />
       </main>
     </>
   );
