@@ -1,0 +1,8 @@
+//Расчет от базового шаблона в 16px
+@mixin calculateTextSize($fontSizePx, $lineHeightPx) {
+  $fontSizeRem: calc($fontSizePx / 16px);
+  $lineHeightRem: calc($lineHeightPx / 16px);
+
+  font-size: #{$fontSizeRem}rem;
+  line-height: #{$lineHeightRem}rem;
+}
