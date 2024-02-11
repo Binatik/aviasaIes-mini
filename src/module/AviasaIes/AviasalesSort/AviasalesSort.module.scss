@@ -20,10 +20,55 @@
   gap: 0 20px;
   justify-content: space-between;
   display: flex;
+  padding-bottom: 26px;
+}
+
+.aviasalesPrice {
+  white-space: nowrap;
+}
+
+.aviasalesTickets {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-self: stretch;
+}
+
+.aviasalesTicket {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.aviasalesTicketItem {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1;
+  gap: 1px;
+}
+
+.aviasalesTicketItem p:last-child {
+  font-size: 14px;
+}
+
+.aviasalesLoadTicket {
+  border-radius: var(--border-main);
 }
 
 @media (min-width: 768px) {
   .aviasalesSortContainer {
     flex-direction: row;
+  }
+
+  .aviasalesTickets {
+    flex-direction: column;
+  }
+
+  .aviasalesTicket {
+    flex-direction: row;
+  }
+
+  .aviasalesTicketItem {
+    flex: 1 1 calc(100% / 3 - 20px);
   }
 }

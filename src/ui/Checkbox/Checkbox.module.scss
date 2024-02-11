@@ -8,6 +8,10 @@
   opacity: 0;
 }
 
+.checkbox:focus-visible + label::before {
+  outline: 1px solid var(--default-color);
+}
+
 .checkbox + label {
   cursor: pointer;
   display: flex;

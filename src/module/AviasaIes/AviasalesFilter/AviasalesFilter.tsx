@@ -35,6 +35,7 @@ function AviasalesFilter() {
     secondCheckbox,
     thirdCheckbox,
   } = state;
+
   const dispatch = useAviasalesDispatch();
 
   console.log(CheckboxKey.thirdCheckbox);

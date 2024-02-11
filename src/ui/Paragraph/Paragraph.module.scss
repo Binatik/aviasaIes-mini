@@ -19,6 +19,13 @@
   letter-spacing: 0.5px;
 }
 
+.paragraph.secondaryMode {
+  color: var(--success-color);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .paragraph.smallSize {
   @include calculateTextSize(12px, 20px);
 }
