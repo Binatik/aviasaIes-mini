@@ -5,9 +5,9 @@ import { useAviasalesSelector } from "../store/hooks/useAviasalesSelector";
 import { CheckboxKey } from "../store/enums";
 import { useAviasalesDispatch } from "../store/hooks/useAviasalesDispatch";
 import { filterActions } from "../store/redux/slices/filterSlice";
-import classes from "./AviasalesFilter.module.scss";
+import classes from "./Filter.module.scss";
 
-function AviasalesFilter() {
+function Filter() {
   const state = {
     disabledAllCheckbox: useAviasalesSelector(
       (state) => state.filterReducer.disabledAllCheckbox,
@@ -37,8 +37,6 @@ function AviasalesFilter() {
   } = state;
 
   const dispatch = useAviasalesDispatch();
-
-  console.log(CheckboxKey.thirdCheckbox);
 
   console.log(
     disabledAllCheckbox,
@@ -99,4 +97,4 @@ function AviasalesFilter() {
   );
 }
 
-export { AviasalesFilter };
+export { Filter };

@@ -35,10 +35,10 @@ const filterSlice = createSlice({
 
     resetCheckBox(state) {
       state.disabledAllCheckbox = false;
-      (state.noneCheckbox = false),
-        (state.firstCheckbox = false),
-        (state.secondCheckbox = false),
-        (state.thirdCheckbox = false);
+      state.noneCheckbox = false;
+      state.firstCheckbox = false;
+      state.secondCheckbox = false;
+      state.thirdCheckbox = false;
     },
   },
 });

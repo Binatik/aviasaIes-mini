@@ -1,17 +1,44 @@
-import { AviasalesFilter } from "./AviasalesFilter/AviasalesFilter";
-import { AviasalesSort } from "./AviasalesSort/AviasalesSort";
-import { Provider } from "react-redux";
-import { store } from "./store/redux/store";
+import { Filter } from "./Filter/Filter";
+import { Sort } from "./Sort/Sort";
 import classes from "./Aviasales.module.scss";
+import { useEffect } from "react";
+import { Api } from "../../api/api";
+import Cookie from "js-cookie";
+import { CookieKey } from "./store/enums";
+import { useAviasalesDispatch } from "./store/hooks/useAviasalesDispatch";
+import { fetchNewTickets } from "./store/redux/slices/ticketsSlice";
+
+const api = new Api();
 
 function Aviasales() {
+  const dispatch = useAviasalesDispatch();
+
+  useEffect(() => {
+    const session = Cookie.get(CookieKey.session);
+
+    if (session) {
+      return;
+    }
+
+    api
+      .createSession()
+      .then((session) => {
+        Cookie.set("session", session.searchId, { expires: 60 });
+      })
+      .then(() => {
+        dispatch(fetchNewTickets());
+      });
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchNewTickets());
+  }, [dispatch]);
+
   return (
-    <Provider store={store}>
-      <div className={classes.aviasalesContainer}>
-        <AviasalesFilter />
-        <AviasalesSort />
-      </div>
-    </Provider>
+    <div className={classes.aviasalesContainer}>
+      <Filter />
+      <Sort />
+    </div>
   );
 }
 

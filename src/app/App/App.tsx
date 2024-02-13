@@ -1,6 +1,6 @@
 import { Logo } from "../../ui/Logo/Logo";
 import { useTheme } from "../../hooks/useTheme";
-import { Aviasales } from "../../module/AviasaIes/Aviasales";
+import { AviasalesPage } from "../../page/Aviasales/Aviasales";
 import "normalize.css";
 import "./App.scss";
 
@@ -15,7 +15,7 @@ const App = () => {
         </div>
       </header>
       <main>
-        <Aviasales />
+        <AviasalesPage />
       </main>
     </>
   );

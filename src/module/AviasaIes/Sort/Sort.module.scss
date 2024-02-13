@@ -12,10 +12,13 @@
 }
 
 .aviasalesContent {
+  display: flex;
+  flex-direction: column;
   padding-top: 20px;
+  gap: 20px;
 }
 
-.aviasalesItem {
+.tickets {
   align-self: stretch;
   gap: 0 20px;
   justify-content: space-between;
@@ -23,36 +26,45 @@
   padding-bottom: 26px;
 }
 
-.aviasalesPrice {
+.ticketsPrice {
   white-space: nowrap;
 }
 
-.aviasalesTickets {
+.segments {
   display: flex;
   gap: 10px;
   justify-content: space-between;
   align-self: stretch;
 }
 
-.aviasalesTicket {
+.segment {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.aviasalesTicketItem {
+.segmentType {
   display: flex;
   flex-direction: column;
   flex: 1 1;
   gap: 1px;
 }
 
-.aviasalesTicketItem p:last-child {
-  font-size: 14px;
+.segmentType .segmentTypeParagraph {
+  font-size: 15px;
 }
 
 .aviasalesLoadTicket {
   border-radius: var(--border-main);
+}
+
+.stops {
+  display: flex;
+  gap: 5px;
+}
+
+.stops .stopParagraph {
+  font-size: 15px;
 }
 
 @media (min-width: 768px) {
@@ -60,15 +72,15 @@
     flex-direction: row;
   }
 
-  .aviasalesTickets {
+  .segments {
     flex-direction: column;
   }
 
-  .aviasalesTicket {
+  .segment {
     flex-direction: row;
   }
 
-  .aviasalesTicketItem {
+  .segmentType {
     flex: 1 1 calc(100% / 3 - 20px);
   }
 }
