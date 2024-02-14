@@ -1,18 +1,17 @@
-import { ISegment } from "../../../api/api";
+import { ISegment } from "../../../api/api.types";
 import { formatAmount } from "../../../helpers/formatAmount";
 import { formatTimer } from "../../../helpers/formatTimer";
 import { getDifferenceTime } from "../../../helpers/getDifferenceTime";
 import { Button } from "../../../ui/Button/Button";
 import { Card } from "../../../ui/Card/Card";
 import { Paragraph } from "../../../ui/Paragraph/Paragraph";
+import { getEndingTransfer } from "../helpers/getEnding";
 import { useAviasalesSelector } from "../store/hooks/useAviasalesSelector";
 import classes from "./Sort.module.scss";
 
 function Sort() {
-  const tickets = useAviasalesSelector((state) => state.ticketsReducer.tickets);
-
+  const tickets = useAviasalesSelector((state) => state.ticketsReducer.ticketsFilter);
   const loader = useAviasalesSelector((state) => state.ticketsReducer.status);
-
   const error = useAviasalesSelector((state) => state.ticketsReducer.error);
 
   console.log(tickets);
@@ -39,15 +38,12 @@ function Sort() {
         </div>
         <div className={classes.segmentType}>
           <Paragraph mode="secondary">
-            {segment.stops.length} Пересадки
+            {segment.stops.length + " "}
+            {getEndingTransfer(segment.stops.length)}
           </Paragraph>
           <div className={classes.stops}>
             {segment.stops.map((stop, index) => (
-              <Paragraph
-                key={index}
-                mode="primary"
-                className={classes.stopParagraph}
-              >
+              <Paragraph key={index} mode="primary" className={classes.stopParagraph}>
                 {stop}
               </Paragraph>
             ))}
@@ -69,24 +65,14 @@ function Sort() {
     return tickets?.map((ticket) => (
       <Card key={ticket.price + ticket.carrier} mode="primary" size="medium">
         <div className={classes.tickets}>
-          <Paragraph
-            className={classes.ticketsPrice}
-            size="medium"
-            mode="success"
-          >
+          <Paragraph className={classes.ticketsPrice} size="medium" mode="success">
             {formatAmount(ticket.price)} P
           </Paragraph>
-          <Paragraph
-            className={classes.ticketsPrice}
-            size="medium"
-            mode="success"
-          >
+          <Paragraph className={classes.ticketsPrice} size="medium" mode="success">
             13 400 Р
           </Paragraph>
         </div>
-        <div className={classes.segments}>
-          {ticket.segments.map((segment) => renderSegment(segment))}
-        </div>
+        <div className={classes.segments}>{ticket.segments.map((segment) => renderSegment(segment))}</div>
       </Card>
     ));
   }

@@ -1,11 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { filterReducer } from "./slices/filterSlice";
 import { ticketsReducer } from "./slices/ticketsSlice";
 // ...
 
 export const storeAviasales = configureStore({
   reducer: {
-    filterReducer,
     ticketsReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),

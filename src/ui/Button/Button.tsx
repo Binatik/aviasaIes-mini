@@ -9,14 +9,7 @@ type IButtonProps = {
   children: React.ReactNode;
 } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, "type">;
 
-function Button({
-  mode,
-  type,
-  wide,
-  children,
-  className,
-  ...props
-}: IButtonProps) {
+function Button({ mode, type, wide, children, className, ...props }: IButtonProps) {
   return (
     <button
       {...props}

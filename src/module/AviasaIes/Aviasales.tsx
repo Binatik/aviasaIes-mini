@@ -23,7 +23,7 @@ function Aviasales() {
     api
       .createSession()
       .then((session) => {
-        Cookie.set("session", session.searchId, { expires: 60 });
+        Cookie.set("session", session.searchId, { expires: 15 });
       })
       .then(() => {
         dispatch(fetchNewTickets());

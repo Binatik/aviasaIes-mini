@@ -8,24 +8,14 @@ type ICheckboxProps = {
   classNameItem?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 
-function Checkbox({
-  label,
-  htmlForId,
-  classNameItem,
-  ...props
-}: ICheckboxProps) {
+function Checkbox({ label, htmlForId, classNameItem, ...props }: ICheckboxProps) {
   return (
     <div
       className={classNames(classes.checkboxItem, {
         classNameItem: classNameItem,
       })}
     >
-      <input
-        {...props}
-        type="checkbox"
-        className={classes.checkbox}
-        id={htmlForId}
-      />
+      <input {...props} type="checkbox" className={classes.checkbox} id={htmlForId} />
       <label htmlFor={htmlForId}>
         <span>{label}</span>
       </label>

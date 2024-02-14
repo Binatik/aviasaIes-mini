@@ -4,62 +4,33 @@ import { Paragraph } from "../../../ui/Paragraph/Paragraph";
 import { useAviasalesSelector } from "../store/hooks/useAviasalesSelector";
 import { CheckboxKey } from "../store/enums";
 import { useAviasalesDispatch } from "../store/hooks/useAviasalesDispatch";
-import { filterActions } from "../store/redux/slices/filterSlice";
 import classes from "./Filter.module.scss";
+import { ticketsActions } from "../store/redux/slices/ticketsSlice";
 
 function Filter() {
-  const state = {
-    disabledAllCheckbox: useAviasalesSelector(
-      (state) => state.filterReducer.disabledAllCheckbox,
-    ),
-    [CheckboxKey.allCheckbox]: useAviasalesSelector(
-      (state) => state.filterReducer.allCheckbox,
-    ),
-    [CheckboxKey.noneCheckbox]: useAviasalesSelector(
-      (state) => state.filterReducer.noneCheckbox,
-    ),
-    [CheckboxKey.firstCheckbox]: useAviasalesSelector(
-      (state) => state.filterReducer.firstCheckbox,
-    ),
-    [CheckboxKey.secondCheckbox]: useAviasalesSelector(
-      (state) => state.filterReducer.secondCheckbox,
-    ),
-    [CheckboxKey.thirdCheckbox]: useAviasalesSelector(
-      (state) => state.filterReducer.thirdCheckbox,
-    ),
-  };
-  const {
-    disabledAllCheckbox,
-    noneCheckbox,
-    firstCheckbox,
-    secondCheckbox,
-    thirdCheckbox,
-  } = state;
+  const checkBox = useAviasalesSelector((state) => state.ticketsReducer.checkBoxType);
+
+  const { disabledAllCheckbox, noneCheckbox, firstCheckbox, secondCheckbox, thirdCheckbox } = checkBox;
+
+  console.log(disabledAllCheckbox, noneCheckbox, firstCheckbox, secondCheckbox, thirdCheckbox);
 
   const dispatch = useAviasalesDispatch();
 
-  console.log(
-    disabledAllCheckbox,
-    noneCheckbox,
-    firstCheckbox,
-    secondCheckbox,
-    thirdCheckbox,
-  );
-
   function updateCheckBox(event: React.ChangeEvent<HTMLInputElement>) {
     const data = {
-      key: event.currentTarget.value,
+      key: event.currentTarget.value as CheckboxKey,
       isActive: event.currentTarget.checked,
     };
 
-    dispatch(filterActions.setCheckBox(data));
+    dispatch(ticketsActions.setCheckBox(data));
+    dispatch(ticketsActions.executeTicketsFilter());
   }
 
   return (
     <Card mode="primary" size="none" className={classes.aviasalesFilter}>
       <Paragraph mode="primary">Количество пересадок</Paragraph>
       <Checkbox
-        onChange={() => dispatch(filterActions.resetCheckBox())}
+        onChange={updateCheckBox}
         checked={!disabledAllCheckbox}
         value={CheckboxKey.allCheckbox}
         htmlForId="all"
