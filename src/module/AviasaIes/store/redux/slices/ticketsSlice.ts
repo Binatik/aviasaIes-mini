@@ -86,6 +86,7 @@ const ticketsSlice = createSlice({
       Object.keys(checkBoxType).forEach((key, index) => {
         if (checkBoxType[key as keyType]) {
           if (key !== CheckboxKey.allCheckbox && key !== CheckboxKey.disabledAllCheckbox) {
+            //Вычитаем из index кол-во ключей которые хотим пропустить от 0.
             const ticketsFilter = state.tickets?.filter(({ segments }) =>
               segments.every((segment) => segment.stops.length === index - 2),
             );
@@ -93,6 +94,8 @@ const ticketsSlice = createSlice({
             if (ticketsFilter) {
               results.push(...ticketsFilter);
             }
+
+            // state.ticketsFilter = state.tickets;
           }
         }
       });
@@ -109,7 +112,6 @@ const ticketsSlice = createSlice({
     builder.addCase(fetchNewTickets.fulfilled, (state, action) => {
       state.status = "fulfilled";
       state.tickets = action.payload;
-      state.ticketsFilter = action.payload;
     });
 
     builder.addCase(fetchNewTickets.rejected, (state) => {

@@ -8,13 +8,11 @@ import classes from "./Filter.module.scss";
 import { ticketsActions } from "../store/redux/slices/ticketsSlice";
 
 function Filter() {
+  const dispatch = useAviasalesDispatch();
+  
   const checkBox = useAviasalesSelector((state) => state.ticketsReducer.checkBoxType);
 
   const { disabledAllCheckbox, noneCheckbox, firstCheckbox, secondCheckbox, thirdCheckbox } = checkBox;
-
-  console.log(disabledAllCheckbox, noneCheckbox, firstCheckbox, secondCheckbox, thirdCheckbox);
-
-  const dispatch = useAviasalesDispatch();
 
   function updateCheckBox(event: React.ChangeEvent<HTMLInputElement>) {
     const data = {

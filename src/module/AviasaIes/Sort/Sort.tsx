@@ -62,8 +62,8 @@ function Sort() {
       return <span style={{ marginBlock: "50px" }}> Идет загрузка...</span>;
     }
 
-    return tickets?.map((ticket) => (
-      <Card key={ticket.price + ticket.carrier} mode="primary" size="medium">
+    return tickets?.map((ticket, index) => (
+      <Card key={ticket.price + ticket.carrier + index} mode="primary" size="medium">
         <div className={classes.tickets}>
           <Paragraph className={classes.ticketsPrice} size="medium" mode="success">
             {formatAmount(ticket.price)} P
