@@ -4,15 +4,15 @@ import { CheckboxKey, CookieKey } from "../../enums";
 import Cookie from "js-cookie";
 import { ITicket } from "../../../../../api/api.types";
 
+type ITicketsType = ITicket[] | null;
+
 type ITicketsState = {
-  tickets: ITicket[] | null;
-  ticketsFilter: ITicket[] | null | undefined;
+  tickets: ITicketsType;
+  ticketsFilter: ITicketsType;
   status: "pending" | "fulfilled" | "rejected" | null;
   error: boolean | null;
 
-  checkBoxType: Record<CheckboxKey, boolean> & {
-    disabledAllCheckbox: boolean;
-  };
+  checkBoxType: Record<CheckboxKey, boolean>;
 };
 
 const api = new Api();
@@ -40,7 +40,7 @@ const initialState: ITicketsState = {
   error: null,
 
   checkBoxType: {
-    disabledAllCheckbox: false,
+    [CheckboxKey.disabledAllCheckbox]: false,
     [CheckboxKey.allCheckbox]: true,
     [CheckboxKey.noneCheckbox]: false,
     [CheckboxKey.firstCheckbox]: false,
@@ -72,42 +72,32 @@ const ticketsSlice = createSlice({
       }
     },
 
-    executeTicketsFilter: (state) => {
+    executeTicketsFilter: (state: ITicketsState) => {
+      type keyType = keyof typeof CheckboxKey;
+
       const { checkBoxType } = state;
+      const results: ITicket[] = [];
 
       if (!checkBoxType.disabledAllCheckbox) {
-        console.log("все");
         state.ticketsFilter = state.tickets;
         return;
       }
 
-      if (checkBoxType[CheckboxKey.noneCheckbox]) {
-        console.log("без");
-        state.ticketsFilter = state.tickets?.filter(({ segments }) =>
-          segments.every((segment) => segment.stops.length === 0),
-        );
-      }
+      Object.keys(checkBoxType).forEach((key, index) => {
+        if (checkBoxType[key as keyType]) {
+          if (key !== CheckboxKey.allCheckbox && key !== CheckboxKey.disabledAllCheckbox) {
+            const ticketsFilter = state.tickets?.filter(({ segments }) =>
+              segments.every((segment) => segment.stops.length === index - 2),
+            );
 
-      if (checkBoxType[CheckboxKey.firstCheckbox]) {
-        console.log("1");
-        state.ticketsFilter = state.tickets?.filter(({ segments }) =>
-          segments.every((segment) => segment.stops.length === 1),
-        );
-      }
+            if (ticketsFilter) {
+              results.push(...ticketsFilter);
+            }
+          }
+        }
+      });
 
-      if (checkBoxType[CheckboxKey.secondCheckbox]) {
-        console.log("2");
-        state.ticketsFilter = state.tickets?.filter(({ segments }) =>
-          segments.every((segment) => segment.stops.length === 2),
-        );
-      }
-
-      if (checkBoxType[CheckboxKey.thirdCheckbox]) {
-        console.log("3");
-        state.ticketsFilter = state.tickets?.filter(({ segments }) =>
-          segments.every((segment) => segment.stops.length === 3),
-        );
-      }
+      state.ticketsFilter = results.flat();
     },
   },
 
