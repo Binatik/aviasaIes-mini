@@ -18,6 +18,11 @@
   gap: 20px;
 }
 
+.loader {
+  display: flex;
+  justify-content: center;
+}
+
 .tickets {
   align-self: stretch;
   gap: 0 20px;

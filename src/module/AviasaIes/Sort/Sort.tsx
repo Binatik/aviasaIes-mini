@@ -11,16 +11,16 @@ import { useAviasalesDispatch } from "../store/hooks/useAviasalesDispatch";
 import { useAviasalesSelector } from "../store/hooks/useAviasalesSelector";
 import { loadingTickets, ticketsActions } from "../store/redux/slices/ticketsSlice";
 import classes from "./Sort.module.scss";
+import { Spinner } from "../../../ui/Spinner/Spinner";
 
 function Sort() {
   const dispatch = useAviasalesDispatch();
 
-  const ticketsData = useAviasalesSelector((state) => state.ticketsReducer.tickets);
   const ticketsFilter = useAviasalesSelector((state) => state.ticketsReducer.ticketsFilter);
   const tickets = useAviasalesSelector((state) => state.ticketsReducer.loadedTickets);
 
   const loader = useAviasalesSelector((state) => state.ticketsReducer.status);
-  const fakeLoader = useAviasalesSelector((state) => state.ticketsReducer.fakeStatus);
+  const pollingLoader = useAviasalesSelector((state) => state.ticketsReducer.pollingStatus);
   const error = useAviasalesSelector((state) => state.ticketsReducer.error);
 
   const sortedType = useAviasalesSelector((state) => state.ticketsReducer.sortedType);
@@ -31,10 +31,6 @@ function Sort() {
     dispatch(ticketsActions.executeSort());
     dispatch(loadingTickets());
   }, [dispatch, sortedType, checkBoxType]);
-
-  if (ticketsData.length === 0 && !loader) {
-    return;
-  }
 
   function renderSegment(segment: ISegment) {
     const timer = formatTimer(segment.duration);
@@ -78,11 +74,13 @@ function Sort() {
       return <span style={{ marginBlock: "50px" }}> Возникла ошибка</span>;
     }
 
-    if (loader === "pending" && !error) {
-      return <span style={{ marginBlock: "50px" }}> Идет загрузка...</span>;
+    if (pollingLoader === "pending" && !error) {
+      return (<div className={classes.loader}>
+        <Spinner />
+      </div>)
     }
 
-    if (tickets.length === 0) {
+    if (tickets.length === 0 && loader === 'fulfilled') {
       return <span style={{ marginBlock: "50px" }}> Кажется мы ничего не нашли</span>;
     }
 
@@ -92,9 +90,7 @@ function Sort() {
           <Paragraph className={classes.ticketsPrice} size="medium" mode="success">
             {formatAmount(ticket.price)} P
           </Paragraph>
-          <Paragraph className={classes.ticketsPrice} size="medium" mode="success">
-            13 400 Р
-          </Paragraph>
+          <img src={`//pics.avs.io/99/36/${ticket.carrier}.png`} alt={`CompanyLogo ${ticket.carrier}`} />
         </div>
         <div className={classes.segments}>{ticket.segments.map((segment) => renderSegment(segment))}</div>
       </Card>
@@ -134,8 +130,7 @@ function Sort() {
       </div>
       <div className={classes.aviasalesContent}>
         {renderTickets()}
-        {fakeLoader === "pending" && position > 5 && <span>Загрузка дополнительных билетов...</span>}
-        {loader === "fulfilled" && !error && (
+        {!error && (
           <Button
             disabled={position >= ticketsFilter.length}
             onClick={async () => {
