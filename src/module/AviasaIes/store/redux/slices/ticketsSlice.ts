@@ -3,40 +3,33 @@ import { Api } from "../../../../../api/api";
 import { CheckboxKey, CookieKey } from "../../enums";
 import Cookie from "js-cookie";
 import { ITicket } from "../../../../../api/api.types";
+import { RootState } from "../store";
 
-type ITicketsType = ITicket[] | null;
+type ITicketsType = ITicket[];
+type ISortedType = "fast" | "cheap" | "optimal";
 
 type ITicketsState = {
   tickets: ITicketsType;
   ticketsFilter: ITicketsType;
+  loadedTickets: ITicketsType;
+  sortedType: ISortedType | null;
+  position: number;
   status: "pending" | "fulfilled" | "rejected" | null;
+  fakeStatus: "pending" | "fulfilled" | "rejected" | null;
   error: boolean | null;
-
   checkBoxType: Record<CheckboxKey, boolean>;
 };
 
 const api = new Api();
 
-export const fetchNewTickets = createAsyncThunk("ticketsSlice/fetchNewTickets", async () => {
-  const session = Cookie.get(CookieKey.session);
-
-  if (!session) {
-    return [];
-  }
-
-  const { tickets } = await api.get(`/tickets?searchId=${session}`, {
-    headers: {
-      "Content-type": "application/json",
-    },
-  });
-
-  return tickets;
-});
-
 const initialState: ITicketsState = {
-  tickets: null,
+  tickets: [],
   ticketsFilter: [],
+  loadedTickets: [],
+  position: 5,
+  sortedType: null,
   status: null,
+  fakeStatus: null,
   error: null,
 
   checkBoxType: {
@@ -53,6 +46,10 @@ const ticketsSlice = createSlice({
   name: "ticketsSlice",
   initialState,
   reducers: {
+    addPosition: (state) => {
+      state.position += 5;
+    },
+
     setCheckBox: (state, action: PayloadAction<{ key: CheckboxKey; isActive: boolean }>) => {
       const { key, isActive } = action.payload;
       const { checkBoxType } = state;
@@ -72,7 +69,11 @@ const ticketsSlice = createSlice({
       }
     },
 
-    executeTicketsFilter: (state: ITicketsState) => {
+    setSortedType: (state, action: PayloadAction<ISortedType>) => {
+      state.sortedType = action.payload;
+    },
+
+    executeFilter: (state: ITicketsState) => {
       type keyType = keyof typeof CheckboxKey;
 
       const { checkBoxType } = state;
@@ -94,31 +95,88 @@ const ticketsSlice = createSlice({
             if (ticketsFilter) {
               results.push(...ticketsFilter);
             }
-
-            // state.ticketsFilter = state.tickets;
           }
         }
       });
 
       state.ticketsFilter = results.flat();
     },
+
+    executeSort: (state) => {
+      const { sortedType } = state;
+
+      if (!sortedType) {
+        return;
+      }
+
+      if (sortedType === "cheap") {
+        state.ticketsFilter = state.ticketsFilter.sort((a, b) => a.price - b.price);
+      }
+
+      if (sortedType === "fast") {
+        state.ticketsFilter = state.ticketsFilter.sort((current, next) => {
+          //Получаем сумму duration в обоих направлениях для current и next билетов.
+          const durationCurrent = current.segments[0].duration + current.segments[1].duration;
+          const durationNext = next.segments[0].duration + next.segments[1].duration;
+
+          return durationCurrent - durationNext;
+        });
+      }
+    },
   },
 
   extraReducers: (builder) => {
     builder.addCase(fetchNewTickets.pending, (state) => {
+      console.log("pending");
       state.status = "pending";
       state.error = null;
     });
     builder.addCase(fetchNewTickets.fulfilled, (state, action) => {
+      console.log("fulfilled");
       state.status = "fulfilled";
       state.tickets = action.payload;
+      state.ticketsFilter = action.payload;
+      state.loadedTickets = action.payload.slice(0, state.position);
     });
-
     builder.addCase(fetchNewTickets.rejected, (state) => {
       state.status = "rejected";
       state.error = true;
     });
+
+    builder.addCase(loadingTickets.pending, (state) => {
+      state.fakeStatus = "pending";
+      state.error = null;
+    });
+    builder.addCase(loadingTickets.fulfilled, (state, action) => {
+      state.loadedTickets = action.payload;
+      state.fakeStatus = "fulfilled";
+    });
   },
+});
+
+export const fetchNewTickets = createAsyncThunk("ticketsSlice/fetchNewTickets", async () => {
+  const session = Cookie.get(CookieKey.session);
+
+  if (!session) {
+    return [];
+  }
+
+  const { tickets } = await api.get(`/tickets?searchId=${session}`, {
+    headers: {
+      "Content-type": "application/json",
+    },
+  });
+
+  return tickets;
+});
+
+export const loadingTickets = createAsyncThunk("ticketsSlice/loadingTickets", async (_, { getState }) => {
+  const state = getState() as RootState;
+  const ticketsFilter = state.ticketsReducer.ticketsFilter;
+  const position = state.ticketsReducer.position;
+  const tmp = await api.fakeEndpoint<ITicket[]>(300, ticketsFilter);
+
+  return tmp.slice(0, position);
 });
 
 const ticketsActions = ticketsSlice.actions;

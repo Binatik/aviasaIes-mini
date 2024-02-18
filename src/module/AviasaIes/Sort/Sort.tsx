@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { ISegment } from "../../../api/api.types";
 import { formatAmount } from "../../../helpers/formatAmount";
 import { formatTimer } from "../../../helpers/formatTimer";
@@ -6,15 +7,34 @@ import { Button } from "../../../ui/Button/Button";
 import { Card } from "../../../ui/Card/Card";
 import { Paragraph } from "../../../ui/Paragraph/Paragraph";
 import { getEndingTransfer } from "../helpers/getEnding";
+import { useAviasalesDispatch } from "../store/hooks/useAviasalesDispatch";
 import { useAviasalesSelector } from "../store/hooks/useAviasalesSelector";
+import { loadingTickets, ticketsActions } from "../store/redux/slices/ticketsSlice";
 import classes from "./Sort.module.scss";
 
 function Sort() {
-  const tickets = useAviasalesSelector((state) => state.ticketsReducer.ticketsFilter);
+  const dispatch = useAviasalesDispatch();
+
+  const ticketsData = useAviasalesSelector((state) => state.ticketsReducer.tickets);
+  const ticketsFilter = useAviasalesSelector((state) => state.ticketsReducer.ticketsFilter);
+  const tickets = useAviasalesSelector((state) => state.ticketsReducer.loadedTickets);
+
   const loader = useAviasalesSelector((state) => state.ticketsReducer.status);
+  const fakeLoader = useAviasalesSelector((state) => state.ticketsReducer.fakeStatus);
   const error = useAviasalesSelector((state) => state.ticketsReducer.error);
 
-  console.log(tickets);
+  const sortedType = useAviasalesSelector((state) => state.ticketsReducer.sortedType);
+  const position = useAviasalesSelector((state) => state.ticketsReducer.position);
+  const checkBoxType = useAviasalesSelector((state) => state.ticketsReducer.checkBoxType);
+
+  useEffect(() => {
+    dispatch(ticketsActions.executeSort());
+    dispatch(loadingTickets());
+  }, [dispatch, sortedType, checkBoxType]);
+
+  if (ticketsData.length === 0 && !loader) {
+    return;
+  }
 
   function renderSegment(segment: ISegment) {
     const timer = formatTimer(segment.duration);
@@ -62,7 +82,11 @@ function Sort() {
       return <span style={{ marginBlock: "50px" }}> Идет загрузка...</span>;
     }
 
-    return tickets?.map((ticket, index) => (
+    if (tickets.length === 0) {
+      return <span style={{ marginBlock: "50px" }}> Кажется мы ничего не нашли</span>;
+    }
+
+    return tickets.map((ticket, index) => (
       <Card key={ticket.price + ticket.carrier + index} mode="primary" size="medium">
         <div className={classes.tickets}>
           <Paragraph className={classes.ticketsPrice} size="medium" mode="success">
@@ -80,22 +104,48 @@ function Sort() {
   return (
     <div className={classes.aviasalesSort}>
       <div className={classes.aviasalesSortContainer}>
-        <Button mode="primary" wide type="active" disabled>
+        <Button
+          onClick={() => dispatch(ticketsActions.setSortedType("cheap"))}
+          mode="primary"
+          wide
+          type={sortedType === "cheap" ? "active" : "disabled"}
+          disabled={sortedType === "cheap"}
+        >
           <Paragraph mode="primary">Самый дешевый</Paragraph>
         </Button>
-        <Button mode="primary" wide>
+        <Button
+          onClick={() => dispatch(ticketsActions.setSortedType("fast"))}
+          mode="primary"
+          wide
+          type={sortedType === "fast" ? "active" : "disabled"}
+          disabled={sortedType === "fast"}
+        >
           <Paragraph mode="primary">Самый быстрый</Paragraph>
         </Button>
-        <Button mode="primary" wide>
+        <Button
+          onClick={() => dispatch(ticketsActions.setSortedType("optimal"))}
+          mode="primary"
+          wide
+          type={sortedType === "optimal" ? "active" : "disabled"}
+          disabled={sortedType === "optimal"}
+        >
           <Paragraph mode="primary">Оптимальный</Paragraph>
         </Button>
       </div>
       <div className={classes.aviasalesContent}>
         {renderTickets()}
-        <br />
-
+        {fakeLoader === "pending" && position > 5 && <span>Загрузка дополнительных билетов...</span>}
         {loader === "fulfilled" && !error && (
-          <Button className={classes.aviasalesLoadTicket} mode="primary" wide>
+          <Button
+            disabled={position >= ticketsFilter.length}
+            onClick={async () => {
+              dispatch(ticketsActions.addPosition());
+              dispatch(loadingTickets());
+            }}
+            className={classes.aviasalesLoadTicket}
+            mode="primary"
+            wide
+          >
             <Paragraph mode="primary">Показать еще 5 билетов!</Paragraph>
           </Button>
         )}

@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 type IButtonProps = {
   mode: "primary";
-  type?: "active";
+  type?: "active" | "disabled";
   wide?: boolean;
   children: React.ReactNode;
 } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, "type">;

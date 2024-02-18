@@ -12,6 +12,7 @@ class Api {
 
   constructor() {
     this.api = "https://aviasales-test-api.kata.academy";
+    //"https://aviasales-test-api.kata.academy/tickets?searchId=f0feb0be8da14cba5ad29eaef2fb1be7";
   }
 
   private async fetchEndpointAviasales(url: string, fetchOptions: RequestInit) {
@@ -39,6 +40,15 @@ class Api {
   async createSession(fetchOptions?: RequestInit): Promise<{ searchId: string }> {
     const optionsWithMethod = { ...fetchOptions, method: HttpMethod.GET };
     return this.fetchEndpointAviasales("/search", optionsWithMethod);
+  }
+
+  async fakeEndpoint<T>(delay: number, state: T): Promise<T> {
+    return new Promise((resolve, rejected) => {
+      setTimeout(() => {
+        resolve(state);
+        rejected(new Error("Rejected fakeEndpoint"));
+      }, delay);
+    });
   }
 }
 

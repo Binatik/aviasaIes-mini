@@ -9,7 +9,7 @@ import { ticketsActions } from "../store/redux/slices/ticketsSlice";
 
 function Filter() {
   const dispatch = useAviasalesDispatch();
-  
+
   const checkBox = useAviasalesSelector((state) => state.ticketsReducer.checkBoxType);
 
   const { disabledAllCheckbox, noneCheckbox, firstCheckbox, secondCheckbox, thirdCheckbox } = checkBox;
@@ -21,7 +21,8 @@ function Filter() {
     };
 
     dispatch(ticketsActions.setCheckBox(data));
-    dispatch(ticketsActions.executeTicketsFilter());
+    dispatch(ticketsActions.executeFilter());
+    dispatch(ticketsActions.executeSort());
   }
 
   return (
