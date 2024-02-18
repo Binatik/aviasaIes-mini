@@ -19,28 +19,27 @@ function Aviasales() {
 
   useEffect(() => {
     dispatch(fetchNewTickets());
-  }, [dispatch])
+  }, [dispatch]);
 
   useEffect(() => {
-    if (!ticketsStop && loader === 'fulfilled' || !ticketsStop && loader === 'rejected') {
+    if ((!ticketsStop && loader === "fulfilled") || (!ticketsStop && loader === "rejected")) {
       dispatch(fetchNewTickets());
     }
-    
-    async function getSession () {
+
+    async function getSession() {
       const sessionKey = Cookie.get(CookieKey.session);
-  
+
       if (!sessionKey) {
         const newSession = await api.createSession();
         Cookie.set("session", newSession.searchId);
       }
-  
+
       if (ticketsStop) {
-        Cookie.remove("session")
+        Cookie.remove("session");
       }
     }
-    getSession ()
-    
-  }, [dispatch, ticketsData, loader, ticketsStop])
+    getSession();
+  }, [dispatch, ticketsData, loader, ticketsStop]);
 
   return (
     <div className={classes.aviasalesContainer}>

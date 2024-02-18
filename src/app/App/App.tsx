@@ -3,7 +3,6 @@ import { useTheme } from "../../hooks/useTheme";
 import { AviasalesPage } from "../../page/Aviasales/Aviasales";
 import "normalize.css";
 import "./App.scss";
-import { useState } from "react";
 
 const App = () => {
   useTheme();

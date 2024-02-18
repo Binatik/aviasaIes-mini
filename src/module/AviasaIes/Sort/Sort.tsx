@@ -75,12 +75,14 @@ function Sort() {
     }
 
     if (pollingLoader === "pending" && !error) {
-      return (<div className={classes.loader}>
-        <Spinner />
-      </div>)
+      return (
+        <div className={classes.loader}>
+          <Spinner />
+        </div>
+      );
     }
 
-    if (tickets.length === 0 && loader === 'fulfilled') {
+    if (tickets.length === 0 && loader === "fulfilled") {
       return <span style={{ marginBlock: "50px" }}> Кажется мы ничего не нашли</span>;
     }
 

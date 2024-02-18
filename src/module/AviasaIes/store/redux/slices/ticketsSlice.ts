@@ -13,9 +13,9 @@ type ITicketsState = {
   ticketsFilter: ITicketsType;
   loadedTickets: ITicketsType;
   sortedType: ISortedType | null;
-  stop: boolean
+  stop: boolean;
   position: number;
-  pollingStatus: "pending" | "fulfilled" | "rejected" | null,
+  pollingStatus: "pending" | "fulfilled" | "rejected" | null;
   status: "pending" | "fulfilled" | "rejected" | null;
   error: boolean | null;
   checkBoxType: Record<CheckboxKey, boolean>;
@@ -140,7 +140,7 @@ const ticketsSlice = createSlice({
       state.ticketsFilter = data;
       state.loadedTickets = data.slice(0, state.position);
 
-      state.stop = action.payload.stop
+      state.stop = action.payload.stop;
     });
     builder.addCase(fetchNewTickets.rejected, (state) => {
       state.status = "rejected";
@@ -148,12 +148,12 @@ const ticketsSlice = createSlice({
     });
 
     builder.addCase(loadingTickets.pending, (state) => {
-      state.pollingStatus = "pending"
+      state.pollingStatus = "pending";
       state.error = null;
     });
     builder.addCase(loadingTickets.fulfilled, (state, action) => {
       state.loadedTickets = action.payload;
-      state.pollingStatus = "fulfilled"
+      state.pollingStatus = "fulfilled";
     });
   },
 });
@@ -162,7 +162,7 @@ export const fetchNewTickets = createAsyncThunk("ticketsSlice/fetchNewTickets", 
   const session = Cookie.get(CookieKey.session);
 
   if (!session) {
-    new Error('Not session');
+    new Error("Not session");
   }
 
   const data = await api.get(`/tickets?searchId=${session}`, {
