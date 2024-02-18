@@ -6,7 +6,7 @@ import { Api } from "../../api/api";
 import Cookie from "js-cookie";
 import { CookieKey } from "./store/enums";
 import { useAviasalesDispatch } from "./store/hooks/useAviasalesDispatch";
-import { fetchNewTickets } from "./store/redux/slices/ticketsSlice";
+import { fetchNewTickets, ticketsActions } from "./store/redux/slices/ticketsSlice";
 import { useAviasalesSelector } from "./store/hooks/useAviasalesSelector";
 
 const api = new Api();
@@ -22,9 +22,14 @@ function Aviasales() {
   }, [dispatch]);
 
   useEffect(() => {
-    if ((!ticketsStop && loader === "fulfilled") || (!ticketsStop && loader === "rejected")) {
-      dispatch(fetchNewTickets());
+    async function test() {
+      if ((!ticketsStop && loader === "fulfilled") || (!ticketsStop && loader === "rejected")) {
+        await dispatch(fetchNewTickets());
+        dispatch(ticketsActions.executeFilter())
+        dispatch(ticketsActions.executeSort())
+      }
     }
+    test()
 
     async function getSession() {
       const sessionKey = Cookie.get(CookieKey.session);

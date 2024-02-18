@@ -137,8 +137,7 @@ const ticketsSlice = createSlice({
       const data = [...state.tickets, ...action.payload.tickets];
 
       state.tickets = data;
-      state.ticketsFilter = data;
-      state.loadedTickets = data.slice(0, state.position);
+      state.loadedTickets = state.ticketsFilter.slice(0, state.position);
 
       state.stop = action.payload.stop;
     });
