@@ -53,6 +53,15 @@ class Api {
       }, delay);
     });
   }
+
+  async setSortedType<T>(payload: T): Promise<T> {
+    return new Promise((resolve, rejected) => {
+      setTimeout(() => {
+        resolve(payload);
+        rejected(new Error("Rejected fakeEndpoint"));
+      }, 0);
+    });
+  }
 }
 
 export { Api };

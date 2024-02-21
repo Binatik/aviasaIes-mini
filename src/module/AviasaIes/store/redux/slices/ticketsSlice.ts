@@ -73,9 +73,9 @@ const ticketsSlice = createSlice({
       }
     },
 
-    setSortedType: (state, action: PayloadAction<ISortedType>) => {
-      state.sortedType = action.payload;
-    },
+    // setSortedType: (state, action: PayloadAction<ISortedType>) => {
+    //   state.sortedType = action.payload;
+    // },
 
     executeFilter: (state: ITicketsState) => {
       type keyType = keyof typeof CheckboxKey;
@@ -159,6 +159,14 @@ const ticketsSlice = createSlice({
 
       state.progressivelyLoadedTickets = state.saveTickets.slice(0, state.position);
     });
+
+    builder.addCase(fakeSetSortedType.pending, (state) => {
+      state.fakeLoading = "pending";
+    });
+
+    builder.addCase(fakeSetSortedType.fulfilled, (state, action) => {
+      state.sortedType = action.payload;
+    });
   },
 });
 
@@ -180,7 +188,7 @@ export const fetchNewTickets = createAsyncThunk("ticketsSlice/fetchNewTickets", 
 
 export const loadingTickets = createAsyncThunk("ticketsSlice/loadingTickets", async (_, { getState }) => {
   //randomDelay не чистая затея с функцией но тут это для примера работы fakeData.
-  const randomDelay = Math.random() * 500 + 1500;
+  const randomDelay = Math.random() * 500 + 1000;
 
   const state = getState() as RootState;
 
@@ -190,6 +198,11 @@ export const loadingTickets = createAsyncThunk("ticketsSlice/loadingTickets", as
   const result = await api.fakeGetTickets(randomDelay, modifiedTickets);
 
   return result.slice(0, position);
+});
+
+export const fakeSetSortedType = createAsyncThunk("ticketsSlice/setSortedType", async (type: ISortedType) => {
+  //randomDelay не чистая затея с функцией но тут это для примера работы fakeData.
+  return await api.setSortedType<ISortedType>(type);
 });
 
 const ticketsActions = ticketsSlice.actions;

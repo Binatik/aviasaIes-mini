@@ -9,7 +9,7 @@ import { Paragraph } from "../../../ui/Paragraph/Paragraph";
 import { getEndingTransfer } from "../helpers/getEnding";
 import { useAviasalesDispatch } from "../store/hooks/useAviasalesDispatch";
 import { useAviasalesSelector } from "../store/hooks/useAviasalesSelector";
-import { loadingTickets, ticketsActions } from "../store/redux/slices/ticketsSlice";
+import { fakeSetSortedType, loadingTickets, ticketsActions } from "../store/redux/slices/ticketsSlice";
 import classes from "./Sort.module.scss";
 import { Spinner } from "../../../ui/Spinner/Spinner";
 
@@ -100,7 +100,7 @@ function Sort() {
     <div className={classes.aviasalesSort}>
       <div className={classes.aviasalesSortContainer}>
         <Button
-          onClick={() => dispatch(ticketsActions.setSortedType("cheap"))}
+          onClick={() => dispatch(fakeSetSortedType("cheap"))}
           mode="primary"
           wide
           type={sortedType === "cheap" ? "active" : "disabled"}
@@ -109,7 +109,7 @@ function Sort() {
           <Paragraph mode="primary">Самый дешевый</Paragraph>
         </Button>
         <Button
-          onClick={() => dispatch(ticketsActions.setSortedType("fast"))}
+          onClick={() => dispatch(fakeSetSortedType("fast"))}
           mode="primary"
           wide
           type={sortedType === "fast" ? "active" : "disabled"}
@@ -118,7 +118,7 @@ function Sort() {
           <Paragraph mode="primary">Самый быстрый</Paragraph>
         </Button>
         <Button
-          onClick={() => dispatch(ticketsActions.setSortedType("optimal"))}
+          onClick={() => dispatch(fakeSetSortedType("optimal"))}
           mode="primary"
           wide
           type={sortedType === "optimal" ? "active" : "disabled"}
