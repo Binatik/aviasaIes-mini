@@ -104,7 +104,7 @@ function Sort() {
           mode="primary"
           wide
           type={sortedType === "cheap" ? "active" : "disabled"}
-          disabled={sortedType === "cheap"}
+          disabled={sortedType === "cheap" || fakeLoading === 'pending'}
         >
           <Paragraph mode="primary">Самый дешевый</Paragraph>
         </Button>
@@ -113,7 +113,7 @@ function Sort() {
           mode="primary"
           wide
           type={sortedType === "fast" ? "active" : "disabled"}
-          disabled={sortedType === "fast"}
+          disabled={sortedType === "fast" || fakeLoading === 'pending'}
         >
           <Paragraph mode="primary">Самый быстрый</Paragraph>
         </Button>
@@ -122,7 +122,7 @@ function Sort() {
           mode="primary"
           wide
           type={sortedType === "optimal" ? "active" : "disabled"}
-          disabled={sortedType === "optimal"}
+          disabled={sortedType === "optimal" || fakeLoading === 'pending'}
         >
           <Paragraph mode="primary">Оптимальный</Paragraph>
         </Button>
@@ -135,6 +135,7 @@ function Sort() {
               dispatch(loadingTickets());
               dispatch(ticketsActions.addPosition());
             }}
+            disabled = {fakeLoading === 'pending'}
             className={classes.aviasalesLoadTicket}
             mode="primary"
             wide
