@@ -65,13 +65,19 @@ function Sort() {
     );
   }
 
+  function renderLoader() {
+    if (fakeLoading === "pending" || !isReceivedFetchData) {
+      return (
+        <div className={classes.fideLoader}>
+          <Spinner className={classes.ticketsLoader} />
+        </div>
+      )
+    }
+  }
+
   function renderTickets() {
     if (error) {
       return <span style={{ marginBlock: "50px" }}> Возникла ошибка</span>;
-    }
-
-    if (fakeLoading === "pending" || !isReceivedFetchData) {
-      return <Spinner />;
     }
 
     if (progressivelyLoadedTickets.length === 0 && fakeLoading === "fulfilled") {
@@ -128,6 +134,7 @@ function Sort() {
         </Button>
       </div>
       <div className={classes.aviasalesContent}>
+        {renderLoader()}
         {renderTickets()}
         {!error && (
           <Button

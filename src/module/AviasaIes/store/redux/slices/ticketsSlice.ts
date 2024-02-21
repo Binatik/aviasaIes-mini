@@ -188,7 +188,7 @@ export const fetchNewTickets = createAsyncThunk("ticketsSlice/fetchNewTickets", 
 
 export const loadingTickets = createAsyncThunk("ticketsSlice/loadingTickets", async (_, { getState }) => {
   //randomDelay не чистая затея с функцией но тут это для примера работы fakeData.
-  const randomDelay = Math.random() * 500 + 1000;
+  const randomDelay = Math.random() * 50 + 150;
 
   const state = getState() as RootState;
 

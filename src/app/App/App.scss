@@ -33,6 +33,7 @@ html[data-theme="light"] {
 body {
   font-family: var(--familyOpen);
   background: var(--background);
+  min-height: 100vh;
 }
 
 h2 {
