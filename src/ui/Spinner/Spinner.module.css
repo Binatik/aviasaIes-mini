@@ -1,11 +1,31 @@
+.spinnerContainer {
+  display: inline-block;
+}
+
+.spinnerContainer.positionStart {
+  margin: 0;
+}
+
+.spinnerContainer.positionCenter {
+  margin: 0 auto;
+}
+
 .spinner {
-  width: 30px;
-  height: 30px;
   border-radius: 50%;
   border: 3px solid;
   border-color: #dbdcef;
-  border-right-color: #474bff;
+  border-right-color: var(--primary-color);
   animation: spinner-d3wgkg 1s infinite linear;
+}
+
+.spinner.sizeSmall {
+  width: 15px;
+  height: 15px;
+}
+
+.spinner.sizeMedium {
+  width: 27px;
+  height: 27px;
 }
 
 @keyframes spinner-d3wgkg {

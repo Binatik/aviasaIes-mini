@@ -1,14 +1,27 @@
 .aviasalesContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
   max-width: var(--container);
   margin: 0 auto;
   padding: 0 20px;
 }
 
+.aviasalesContent {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.infoContainer {
+  display: flex;
+  gap: 10px;
+  padding-block: 10px;
+  visibility: visible;
+  transition:
+    opacity 0.3s,
+    visibility 0.3s;
+}
+
 @media (min-width: 768px) {
-  .aviasalesContainer {
+  .aviasalesContent {
     flex-wrap: nowrap;
     flex-direction: row;
   }

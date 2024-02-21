@@ -6,24 +6,27 @@ import { CheckboxKey } from "../store/enums";
 import { useAviasalesDispatch } from "../store/hooks/useAviasalesDispatch";
 import classes from "./Filter.module.scss";
 import { ticketsActions } from "../store/redux/slices/ticketsSlice";
+import { useEffect } from "react";
 
 function Filter() {
   const dispatch = useAviasalesDispatch();
 
-  const checkBox = useAviasalesSelector((state) => state.ticketsReducer.checkBoxType);
+  const checkBoxType = useAviasalesSelector((state) => state.ticketsReducer.checkBoxType);
 
-  const { disabledAllCheckbox, noneCheckbox, firstCheckbox, secondCheckbox, thirdCheckbox } = checkBox;
+  const { disabledAllCheckbox, noneCheckbox, firstCheckbox, secondCheckbox, thirdCheckbox } = checkBoxType;
 
   function updateCheckBox(event: React.ChangeEvent<HTMLInputElement>) {
     const data = {
       key: event.currentTarget.value as CheckboxKey,
       isActive: event.currentTarget.checked,
     };
-
     dispatch(ticketsActions.setCheckBox(data));
+  }
+
+  useEffect(() => {
     dispatch(ticketsActions.executeFilter());
     dispatch(ticketsActions.executeSort());
-  }
+  }, [dispatch, checkBoxType]);
 
   return (
     <Card mode="primary" size="none" className={classes.aviasalesFilter}>

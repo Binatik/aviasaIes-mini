@@ -1,4 +1,5 @@
-import { IAviasales } from "./api.types";
+import { IAviasales, ITicket } from "./api.types";
+import { v4 as createId } from "uuid";
 
 enum HttpMethod {
   GET = "GET",
@@ -12,7 +13,6 @@ class Api {
 
   constructor() {
     this.api = "https://aviasales-test-api.kata.academy";
-    //"https://aviasales-test-api.kata.academy/tickets?searchId=f0feb0be8da14cba5ad29eaef2fb1be7";
   }
 
   private async fetchEndpointAviasales(url: string, fetchOptions: RequestInit) {
@@ -27,7 +27,7 @@ class Api {
     }
   }
 
-  async get(url: string, fetchOptions: RequestInit): Promise<IAviasales> {
+  async get<T = IAviasales>(url: string, fetchOptions: RequestInit): Promise<T> {
     const optionsWithMethod = { ...fetchOptions, method: HttpMethod.GET };
     return this.fetchEndpointAviasales(url, optionsWithMethod);
   }
@@ -42,10 +42,13 @@ class Api {
     return this.fetchEndpointAviasales("/search", optionsWithMethod);
   }
 
-  async fakeEndpoint<T>(delay: number, state: T): Promise<T> {
+  async fakeGetTickets(delay: number, state: ITicket[]): Promise<ITicket[]> {
     return new Promise((resolve, rejected) => {
       setTimeout(() => {
-        resolve(state);
+        const data = state.map<ITicket>((item) => {
+          return { ...item, id: createId() };
+        });
+        resolve(data);
         rejected(new Error("Rejected fakeEndpoint"));
       }, delay);
     });

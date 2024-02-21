@@ -16,21 +16,17 @@ import { Spinner } from "../../../ui/Spinner/Spinner";
 function Sort() {
   const dispatch = useAviasalesDispatch();
 
-  const ticketsFilter = useAviasalesSelector((state) => state.ticketsReducer.ticketsFilter);
-  const tickets = useAviasalesSelector((state) => state.ticketsReducer.loadedTickets);
-
-  const loader = useAviasalesSelector((state) => state.ticketsReducer.status);
-  const pollingLoader = useAviasalesSelector((state) => state.ticketsReducer.pollingStatus);
+  const progressivelyLoadedTickets = useAviasalesSelector((state) => state.ticketsReducer.progressivelyLoadedTickets);
+  const fakeLoading = useAviasalesSelector((state) => state.ticketsReducer.fakeLoading);
+  const isReceivedFetchData = useAviasalesSelector((state) => state.ticketsReducer.isReceivedFetchData);
   const error = useAviasalesSelector((state) => state.ticketsReducer.error);
 
   const sortedType = useAviasalesSelector((state) => state.ticketsReducer.sortedType);
-  const position = useAviasalesSelector((state) => state.ticketsReducer.position);
-  const checkBoxType = useAviasalesSelector((state) => state.ticketsReducer.checkBoxType);
 
   useEffect(() => {
+    dispatch(ticketsActions.executeFilter());
     dispatch(ticketsActions.executeSort());
-    dispatch(loadingTickets());
-  }, [dispatch, sortedType, checkBoxType]);
+  }, [dispatch, sortedType]);
 
   function renderSegment(segment: ISegment) {
     const timer = formatTimer(segment.duration);
@@ -74,20 +70,21 @@ function Sort() {
       return <span style={{ marginBlock: "50px" }}> Возникла ошибка</span>;
     }
 
-    if (pollingLoader === "pending" && !error) {
-      return (
-        <div className={classes.loader}>
-          <Spinner />
-        </div>
-      );
+    if (fakeLoading === "pending" || !isReceivedFetchData) {
+      return <Spinner />;
     }
 
-    if (tickets.length === 0 && loader === "fulfilled") {
+    if (progressivelyLoadedTickets.length === 0 && fakeLoading === "fulfilled") {
       return <span style={{ marginBlock: "50px" }}> Кажется мы ничего не нашли</span>;
     }
 
-    return tickets.map((ticket, index) => (
-      <Card key={ticket.price + ticket.carrier + index} mode="primary" size="medium">
+    return progressivelyLoadedTickets.map((ticket) => (
+      <Card
+        className={ticket.id || ticket.carrier + ticket.price}
+        key={ticket.id || ticket.carrier + ticket.price}
+        mode="primary"
+        size="medium"
+      >
         <div className={classes.tickets}>
           <Paragraph className={classes.ticketsPrice} size="medium" mode="success">
             {formatAmount(ticket.price)} P
@@ -134,10 +131,9 @@ function Sort() {
         {renderTickets()}
         {!error && (
           <Button
-            disabled={position >= ticketsFilter.length}
             onClick={async () => {
-              dispatch(ticketsActions.addPosition());
               dispatch(loadingTickets());
+              dispatch(ticketsActions.addPosition());
             }}
             className={classes.aviasalesLoadTicket}
             mode="primary"

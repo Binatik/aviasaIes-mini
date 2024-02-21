@@ -9,14 +9,15 @@ type ITicketsType = ITicket[];
 type ISortedType = "fast" | "cheap" | "optimal";
 
 type ITicketsState = {
-  tickets: ITicketsType;
-  ticketsFilter: ITicketsType;
-  loadedTickets: ITicketsType;
+  saveTickets: ITicketsType;
+  modifiedTickets: ITicketsType;
+  progressivelyLoadedTickets: ITicketsType;
+  isReceivedFetchData: boolean;
   sortedType: ISortedType | null;
   stop: boolean;
   position: number;
-  pollingStatus: "pending" | "fulfilled" | "rejected" | null;
-  status: "pending" | "fulfilled" | "rejected" | null;
+  fetchLoading: "pending" | "fulfilled" | null;
+  fakeLoading: "pending" | "fulfilled" | null;
   error: boolean | null;
   checkBoxType: Record<CheckboxKey, boolean>;
 };
@@ -24,15 +25,16 @@ type ITicketsState = {
 const api = new Api();
 
 const initialState: ITicketsState = {
-  tickets: [],
-  ticketsFilter: [],
-  loadedTickets: [],
+  saveTickets: [],
+  modifiedTickets: [],
+  progressivelyLoadedTickets: [],
+  fetchLoading: null,
+  fakeLoading: null,
+  sortedType: null,
+  isReceivedFetchData: false,
+  error: false,
   stop: false,
   position: 5,
-  sortedType: null,
-  status: null,
-  pollingStatus: null,
-  error: null,
 
   checkBoxType: {
     [CheckboxKey.disabledAllCheckbox]: false,
@@ -82,7 +84,7 @@ const ticketsSlice = createSlice({
       const results: ITicket[] = [];
 
       if (!checkBoxType.disabledAllCheckbox) {
-        state.ticketsFilter = state.tickets;
+        state.modifiedTickets = state.saveTickets;
         return;
       }
 
@@ -90,7 +92,7 @@ const ticketsSlice = createSlice({
         if (checkBoxType[key as keyType]) {
           if (key !== CheckboxKey.allCheckbox && key !== CheckboxKey.disabledAllCheckbox) {
             //Вычитаем из index кол-во ключей которые хотим пропустить от 0.
-            const ticketsFilter = state.tickets?.filter(({ segments }) =>
+            const ticketsFilter = state.saveTickets?.filter(({ segments }) =>
               segments.every((segment) => segment.stops.length === index - 2),
             );
 
@@ -101,7 +103,7 @@ const ticketsSlice = createSlice({
         }
       });
 
-      state.ticketsFilter = results.flat();
+      state.modifiedTickets = results.flat();
     },
 
     executeSort: (state) => {
@@ -112,11 +114,11 @@ const ticketsSlice = createSlice({
       }
 
       if (sortedType === "cheap") {
-        state.ticketsFilter = state.ticketsFilter.sort((a, b) => a.price - b.price);
+        state.modifiedTickets = state.modifiedTickets.sort((a, b) => a.price - b.price);
       }
 
       if (sortedType === "fast") {
-        state.ticketsFilter = state.ticketsFilter.sort((current, next) => {
+        state.modifiedTickets = state.modifiedTickets.sort((current, next) => {
           //Получаем сумму duration в обоих направлениях для current и next билетов.
           const durationCurrent = current.segments[0].duration + current.segments[1].duration;
           const durationNext = next.segments[0].duration + next.segments[1].duration;
@@ -129,30 +131,33 @@ const ticketsSlice = createSlice({
 
   extraReducers: (builder) => {
     builder.addCase(fetchNewTickets.pending, (state) => {
-      state.status = "pending";
-      state.error = null;
+      state.fetchLoading = "pending";
+      state.error = false;
     });
     builder.addCase(fetchNewTickets.fulfilled, (state, action) => {
-      state.status = "fulfilled";
-      const data = [...state.tickets, ...action.payload.tickets];
-
-      state.tickets = data;
-      state.loadedTickets = state.ticketsFilter.slice(0, state.position);
+      const result = [...state.saveTickets, ...action.payload.tickets];
+      state.saveTickets = result;
 
       state.stop = action.payload.stop;
+      state.isReceivedFetchData = true;
+      state.fetchLoading = "fulfilled";
     });
     builder.addCase(fetchNewTickets.rejected, (state) => {
-      state.status = "rejected";
       state.error = true;
     });
 
     builder.addCase(loadingTickets.pending, (state) => {
-      state.pollingStatus = "pending";
-      state.error = null;
+      state.fakeLoading = "pending";
     });
     builder.addCase(loadingTickets.fulfilled, (state, action) => {
-      state.loadedTickets = action.payload;
-      state.pollingStatus = "fulfilled";
+      state.fakeLoading = "fulfilled";
+
+      if (action.payload.length > 1) {
+        state.progressivelyLoadedTickets = action.payload;
+        return;
+      }
+
+      state.progressivelyLoadedTickets = state.saveTickets.slice(0, state.position);
     });
   },
 });
@@ -164,23 +169,27 @@ export const fetchNewTickets = createAsyncThunk("ticketsSlice/fetchNewTickets", 
     new Error("Not session");
   }
 
-  const data = await api.get(`/tickets?searchId=${session}`, {
+  const result = await api.get(`/tickets?searchId=${session}`, {
     headers: {
       "Content-type": "application/json",
     },
   });
 
-  return data;
+  return result;
 });
 
 export const loadingTickets = createAsyncThunk("ticketsSlice/loadingTickets", async (_, { getState }) => {
-  const randomDelay = Math.random() * (1000 - 300) + 300;
-  const state = getState() as RootState;
-  const ticketsFilter = state.ticketsReducer.ticketsFilter;
-  const position = state.ticketsReducer.position;
-  const tmp = await api.fakeEndpoint<ITicket[]>(randomDelay, ticketsFilter);
+  //randomDelay не чистая затея с функцией но тут это для примера работы fakeData.
+  const randomDelay = Math.random() * 500 + 1500;
 
-  return tmp.slice(0, position);
+  const state = getState() as RootState;
+
+  const position = state.ticketsReducer.position;
+  const modifiedTickets = state.ticketsReducer.modifiedTickets;
+
+  const result = await api.fakeGetTickets(randomDelay, modifiedTickets);
+
+  return result.slice(0, position);
 });
 
 const ticketsActions = ticketsSlice.actions;

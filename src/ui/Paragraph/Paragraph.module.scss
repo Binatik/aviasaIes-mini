@@ -26,6 +26,10 @@
   letter-spacing: 0.5px;
 }
 
+.paragraph.superSmallSize {
+  @include calculateTextSize(9px, 14px);
+}
+
 .paragraph.smallSize {
   @include calculateTextSize(12px, 20px);
 }
