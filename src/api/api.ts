@@ -1,5 +1,4 @@
-import { IAviasales, ITicket } from "./api.types";
-import { v4 as createId } from "uuid";
+import { IAviasales } from "./api.types";
 
 enum HttpMethod {
   GET = "GET",
@@ -42,13 +41,10 @@ class Api {
     return this.fetchEndpointAviasales("/search", optionsWithMethod);
   }
 
-  async fakeGetTickets(delay: number, state: ITicket[]): Promise<ITicket[]> {
+  async fakeEndpoint<T>(delay: number, state: T): Promise<T> {
     return new Promise((resolve, rejected) => {
       setTimeout(() => {
-        const data = state.map<ITicket>((item) => {
-          return { ...item, id: createId() };
-        });
-        resolve(data);
+        resolve(state);
         rejected(new Error("Rejected fakeEndpoint"));
       }, delay);
     });

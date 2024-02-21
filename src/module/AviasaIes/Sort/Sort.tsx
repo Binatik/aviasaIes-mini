@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import { ISegment } from "../../../api/api.types";
 import { formatAmount } from "../../../helpers/formatAmount";
 import { formatTimer } from "../../../helpers/formatTimer";
@@ -13,7 +13,7 @@ import { fakeSetSortedType, loadingTickets, ticketsActions } from "../store/redu
 import classes from "./Sort.module.scss";
 import { Spinner } from "../../../ui/Spinner/Spinner";
 
-function Sort() {
+const Sort = memo(function Sort() {
   const dispatch = useAviasalesDispatch();
 
   const progressivelyLoadedTickets = useAviasalesSelector((state) => state.ticketsReducer.progressivelyLoadedTickets);
@@ -71,7 +71,7 @@ function Sort() {
         <div className={classes.fideLoader}>
           <Spinner className={classes.ticketsLoader} />
         </div>
-      )
+      );
     }
   }
 
@@ -85,12 +85,7 @@ function Sort() {
     }
 
     return progressivelyLoadedTickets.map((ticket) => (
-      <Card
-        className={ticket.id || ticket.carrier + ticket.price}
-        key={ticket.id || ticket.carrier + ticket.price}
-        mode="primary"
-        size="medium"
-      >
+      <Card className={ticket.id} key={ticket.id} mode="primary" size="medium">
         <div className={classes.tickets}>
           <Paragraph className={classes.ticketsPrice} size="medium" mode="success">
             {formatAmount(ticket.price)} P
@@ -110,7 +105,7 @@ function Sort() {
           mode="primary"
           wide
           type={sortedType === "cheap" ? "active" : "disabled"}
-          disabled={sortedType === "cheap" || fakeLoading === 'pending'}
+          disabled={sortedType === "cheap" || fakeLoading === "pending"}
         >
           <Paragraph mode="primary">Самый дешевый</Paragraph>
         </Button>
@@ -119,7 +114,7 @@ function Sort() {
           mode="primary"
           wide
           type={sortedType === "fast" ? "active" : "disabled"}
-          disabled={sortedType === "fast" || fakeLoading === 'pending'}
+          disabled={sortedType === "fast" || fakeLoading === "pending"}
         >
           <Paragraph mode="primary">Самый быстрый</Paragraph>
         </Button>
@@ -128,7 +123,7 @@ function Sort() {
           mode="primary"
           wide
           type={sortedType === "optimal" ? "active" : "disabled"}
-          disabled={sortedType === "optimal" || fakeLoading === 'pending'}
+          disabled={sortedType === "optimal" || fakeLoading === "pending"}
         >
           <Paragraph mode="primary">Оптимальный</Paragraph>
         </Button>
@@ -136,13 +131,13 @@ function Sort() {
       <div className={classes.aviasalesContent}>
         {renderLoader()}
         {renderTickets()}
-        {!error && (
+        {!error && progressivelyLoadedTickets.length >= 5 && (
           <Button
             onClick={async () => {
               dispatch(loadingTickets());
               dispatch(ticketsActions.addPosition());
             }}
-            disabled = {fakeLoading === 'pending'}
+            disabled={fakeLoading === "pending"}
             className={classes.aviasalesLoadTicket}
             mode="primary"
             wide
@@ -153,6 +148,6 @@ function Sort() {
       </div>
     </div>
   );
-}
+});
 
 export { Sort };

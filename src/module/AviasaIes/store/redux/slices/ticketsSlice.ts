@@ -4,6 +4,7 @@ import { CheckboxKey, CookieKey } from "../../enums";
 import Cookie from "js-cookie";
 import { ITicket } from "../../../../../api/api.types";
 import { RootState } from "../store";
+import { v4 as createId } from "uuid";
 
 type ITicketsType = ITicket[];
 type ISortedType = "fast" | "cheap" | "optimal";
@@ -73,9 +74,13 @@ const ticketsSlice = createSlice({
       }
     },
 
-    // setSortedType: (state, action: PayloadAction<ISortedType>) => {
-    //   state.sortedType = action.payload;
-    // },
+    setIdTickets: (state, action: PayloadAction<ITicket[]>) => {
+      const dataTrueId = action.payload.map<ITicket>((item) => {
+        return { ...item, id: createId() };
+      });
+
+      state.saveTickets = [...state.saveTickets, ...dataTrueId];
+    },
 
     executeFilter: (state: ITicketsState) => {
       type keyType = keyof typeof CheckboxKey;
@@ -135,9 +140,6 @@ const ticketsSlice = createSlice({
       state.error = false;
     });
     builder.addCase(fetchNewTickets.fulfilled, (state, action) => {
-      const result = [...state.saveTickets, ...action.payload.tickets];
-      state.saveTickets = result;
-
       state.stop = action.payload.stop;
       state.isReceivedFetchData = true;
       state.fetchLoading = "fulfilled";
@@ -170,7 +172,7 @@ const ticketsSlice = createSlice({
   },
 });
 
-export const fetchNewTickets = createAsyncThunk("ticketsSlice/fetchNewTickets", async () => {
+export const fetchNewTickets = createAsyncThunk("ticketsSlice/fetchNewTickets", async (_, { dispatch }) => {
   const session = Cookie.get(CookieKey.session);
 
   if (!session) {
@@ -182,6 +184,8 @@ export const fetchNewTickets = createAsyncThunk("ticketsSlice/fetchNewTickets", 
       "Content-type": "application/json",
     },
   });
+
+  dispatch(ticketsActions.setIdTickets(result.tickets));
 
   return result;
 });
@@ -195,13 +199,12 @@ export const loadingTickets = createAsyncThunk("ticketsSlice/loadingTickets", as
   const position = state.ticketsReducer.position;
   const modifiedTickets = state.ticketsReducer.modifiedTickets;
 
-  const result = await api.fakeGetTickets(randomDelay, modifiedTickets);
+  const result = await api.fakeEndpoint(randomDelay, modifiedTickets);
 
   return result.slice(0, position);
 });
 
 export const fakeSetSortedType = createAsyncThunk("ticketsSlice/setSortedType", async (type: ISortedType) => {
-  //randomDelay не чистая затея с функцией но тут это для примера работы fakeData.
   return await api.setSortedType<ISortedType>(type);
 });
 
