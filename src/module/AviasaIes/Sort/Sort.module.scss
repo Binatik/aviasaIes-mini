@@ -38,7 +38,7 @@
 
 .fideLoader {
   position: fixed;
-  pointer-events: none;
+  // pointer-events: none;
   left: 0;
   top: 0;
   width: 100%;
@@ -47,6 +47,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 10;
 }
 
 .ticketsLoader {

@@ -13,12 +13,16 @@
 .button.primaryMode {
   color: var(--default-color);
   background-color: var(--base-color);
+}
+
+
+.button.primaryMode:not([disabled]) {
   transition:
     color 0.2s,
     background-color 0.2s;
 }
 
-.button.primaryMode p {
+.button.primaryMode:not([disabled]) p {
   transition: color 0.2s;
 }
 
@@ -28,7 +32,7 @@
 
 .button.primaryMode.activeType {
   cursor: default;
-  background-color: var(--main-background-color);
+  background-color: var(--primary-color);
   color: var(--base-color);
 }
 
@@ -37,12 +41,12 @@
 }
 
 @media (hover: hover) {
-  .button.primaryMode:hover {
-    background-color: var(--main-background-color);
-    color: var(--base-color);
+  .button.primaryMode:not([disabled]):hover {
+    background-color: var(--hover-success);
+    color: var(--default-color);
   }
 
-  .button.primaryMode:hover p {
-    color: var(--base-color);
+  .button.primaryMode:not([disabled]):hover p {
+    color: var(--default-color);
   }
 }

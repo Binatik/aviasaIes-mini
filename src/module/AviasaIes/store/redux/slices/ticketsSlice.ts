@@ -78,8 +78,8 @@ const ticketsSlice = createSlice({
     },
 
     setIdTickets: (state, action: PayloadAction<ITicket[]>) => {
-      const dataTrueId = action.payload.map<ITicket>((item) => {
-        return { ...item, id: createId() };
+      const dataTrueId = action.payload.map<ITicket>((ticket) => {
+        return { ...ticket, id: createId() };
       });
 
       state.saveTickets = [...state.saveTickets, ...dataTrueId];
@@ -175,12 +175,14 @@ export const fetchNewTickets = createAsyncThunk("ticketsSlice/fetchNewTickets", 
 });
 
 export const loadingTickets = createAsyncThunk("ticketsSlice/loadingTickets", async (_, { getState }) => {
+  //randomDelay не чистая затея с функцией но тут это для примера работы fakeData.
+  const randomDelay = Math.random() * 50 + 150;
   const state = getState() as RootState;
 
   const position = state.ticketsReducer.position;
   const modifiedTickets = state.ticketsReducer.modifiedTickets;
 
-  const result = await api.fakeEndpoint(0, modifiedTickets);
+  const result = await api.fakeEndpoint(randomDelay, modifiedTickets);
 
   return result.slice(0, position);
 });

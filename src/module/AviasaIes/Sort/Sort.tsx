@@ -138,6 +138,7 @@ function Sort() {
               await dispatch(loadingTickets());
             }}
             disabled={fakeLoading === "pending"}
+            type="active"
             className={classes.aviasalesLoadTicket}
             mode="primary"
             wide
