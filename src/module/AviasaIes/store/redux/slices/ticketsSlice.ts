@@ -6,13 +6,12 @@ import { ITicket } from "../../../../../api/api.types";
 import { RootState } from "../store";
 import { v4 as createId } from "uuid";
 
-type ITicketsType = ITicket[];
-type ISortedType = "fast" | "cheap" | "optimal";
+export type ISortedType = "fast" | "cheap" | "optimal";
 
 type ITicketsState = {
-  saveTickets: ITicketsType;
-  modifiedTickets: ITicketsType;
-  progressivelyLoadedTickets: ITicketsType;
+  saveTickets: ITicket[];
+  modifiedTickets: ITicket[];
+  progressivelyLoadedTickets: ITicket[];
   isReceivedFetchData: boolean;
   sortedType: ISortedType | null;
   stop: boolean;
@@ -74,6 +73,10 @@ const ticketsSlice = createSlice({
       }
     },
 
+    setSortedType: (state, action: PayloadAction<ISortedType>) => {
+      state.sortedType = action.payload;
+    },
+
     setIdTickets: (state, action: PayloadAction<ITicket[]>) => {
       const dataTrueId = action.payload.map<ITicket>((item) => {
         return { ...item, id: createId() };
@@ -86,7 +89,7 @@ const ticketsSlice = createSlice({
       type keyType = keyof typeof CheckboxKey;
 
       const { checkBoxType } = state;
-      const results: ITicket[] = [];
+      let results: ITicket[] = [];
 
       if (!checkBoxType.disabledAllCheckbox) {
         state.modifiedTickets = state.saveTickets;
@@ -102,35 +105,14 @@ const ticketsSlice = createSlice({
             );
 
             if (ticketsFilter) {
-              results.push(...ticketsFilter);
+              results = [...results, ...ticketsFilter];
             }
           }
         }
       });
 
-      state.modifiedTickets = results.flat();
-    },
-
-    executeSort: (state) => {
-      const { sortedType } = state;
-
-      if (!sortedType) {
-        return;
-      }
-
-      if (sortedType === "cheap") {
-        state.modifiedTickets = state.modifiedTickets.sort((a, b) => a.price - b.price);
-      }
-
-      if (sortedType === "fast") {
-        state.modifiedTickets = state.modifiedTickets.sort((current, next) => {
-          //Получаем сумму duration в обоих направлениях для current и next билетов.
-          const durationCurrent = current.segments[0].duration + current.segments[1].duration;
-          const durationNext = next.segments[0].duration + next.segments[1].duration;
-
-          return durationCurrent - durationNext;
-        });
-      }
+      state.position = 5;
+      state.modifiedTickets = results.sort(() => Math.random() - 0.5);
     },
   },
 
@@ -162,12 +144,14 @@ const ticketsSlice = createSlice({
       state.progressivelyLoadedTickets = state.saveTickets.slice(0, state.position);
     });
 
-    builder.addCase(fakeSetSortedType.pending, (state) => {
+    builder.addCase(fetchTicketsSort.pending, (state) => {
       state.fakeLoading = "pending";
     });
 
-    builder.addCase(fakeSetSortedType.fulfilled, (state, action) => {
-      state.sortedType = action.payload;
+    builder.addCase(fetchTicketsSort.fulfilled, (state, action) => {
+      state.modifiedTickets = action.payload;
+      state.position = 5;
+      state.fakeLoading = "fulfilled";
     });
   },
 });
@@ -191,21 +175,23 @@ export const fetchNewTickets = createAsyncThunk("ticketsSlice/fetchNewTickets", 
 });
 
 export const loadingTickets = createAsyncThunk("ticketsSlice/loadingTickets", async (_, { getState }) => {
-  //randomDelay не чистая затея с функцией но тут это для примера работы fakeData.
-  const randomDelay = Math.random() * 50 + 150;
-
   const state = getState() as RootState;
 
   const position = state.ticketsReducer.position;
   const modifiedTickets = state.ticketsReducer.modifiedTickets;
 
-  const result = await api.fakeEndpoint(randomDelay, modifiedTickets);
+  const result = await api.fakeEndpoint(0, modifiedTickets);
 
   return result.slice(0, position);
 });
 
-export const fakeSetSortedType = createAsyncThunk("ticketsSlice/setSortedType", async (type: ISortedType) => {
-  return await api.setSortedType<ISortedType>(type);
+export const fetchTicketsSort = createAsyncThunk("ticketsSlice/fetchTicketsSort", async (_, { getState }) => {
+  const state = getState() as RootState;
+
+  const sortedType = state.ticketsReducer.sortedType;
+  const modifiedTickets = state.ticketsReducer.modifiedTickets;
+
+  return await api.fakeExecuteSort(sortedType, modifiedTickets);
 });
 
 const ticketsActions = ticketsSlice.actions;

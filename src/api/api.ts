@@ -1,4 +1,5 @@
-import { IAviasales } from "./api.types";
+import { ISortedType } from "../module/AviasaIes/store/redux/slices/ticketsSlice";
+import { IAviasales, ITicket } from "./api.types";
 
 enum HttpMethod {
   GET = "GET",
@@ -50,11 +51,26 @@ class Api {
     });
   }
 
-  async setSortedType<T>(payload: T): Promise<T> {
-    return new Promise((resolve, rejected) => {
+  async fakeExecuteSort(payload: ISortedType | null, modifiedTickets: ITicket[]): Promise<ITicket[]> {
+    return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(payload);
-        rejected(new Error("Rejected fakeEndpoint"));
+        if (payload === "cheap") {
+          const result = [...modifiedTickets].sort((a, b) => a.price - b.price);
+
+          resolve(result);
+        }
+
+        if (payload === "fast") {
+          const result = [...modifiedTickets].sort((current, next) => {
+            //Получаем сумму duration в обоих направлениях для current и next билетов.
+            const durationCurrent = current.segments[0].duration + current.segments[1].duration;
+            const durationNext = next.segments[0].duration + next.segments[1].duration;
+
+            return durationCurrent - durationNext;
+          });
+
+          resolve(result);
+        }
       }, 0);
     });
   }

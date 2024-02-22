@@ -24,27 +24,30 @@ function Aviasales() {
   const ticketsStop = useAviasalesSelector((state) => state.ticketsReducer.stop);
 
   useEffect(() => {
-    dispatch(fetchNewTickets());
+    async function initSession() {
+      const sessionKey = Cookie.get(CookieKey.session);
+
+      if (sessionKey) {
+        Cookie.remove("session");
+      }
+
+      const newSession = await api.createSession();
+      Cookie.set("session", newSession.searchId);
+      await dispatch(fetchNewTickets());
+    }
+    initSession();
   }, [dispatch]);
 
   useEffect(() => {
-    async function setSession() {
-      const sessionKey = Cookie.get(CookieKey.session);
+    const sessionKey = Cookie.get(CookieKey.session);
 
-      if ((!ticketsStop && fetchLoading === "fulfilled") || (!ticketsStop && error)) {
-        dispatch(fetchNewTickets());
-      }
-
-      if (!sessionKey) {
-        const newSession = await api.createSession();
-        Cookie.set("session", newSession.searchId);
-      }
-
-      if (ticketsStop && sessionKey) {
-        Cookie.remove("session");
-      }
+    if ((!ticketsStop && fetchLoading === "fulfilled") || (!ticketsStop && error)) {
+      dispatch(fetchNewTickets());
     }
-    setSession();
+
+    if (ticketsStop && sessionKey) {
+      Cookie.remove("session");
+    }
   }, [dispatch, fetchLoading, ticketsStop, error]);
 
   useEffect(() => {

@@ -5,7 +5,7 @@ import { useAviasalesSelector } from "../store/hooks/useAviasalesSelector";
 import { CheckboxKey } from "../store/enums";
 import { useAviasalesDispatch } from "../store/hooks/useAviasalesDispatch";
 import classes from "./Filter.module.scss";
-import { ticketsActions } from "../store/redux/slices/ticketsSlice";
+import { fetchTicketsSort, ticketsActions } from "../store/redux/slices/ticketsSlice";
 import { useEffect } from "react";
 
 function Filter() {
@@ -25,7 +25,7 @@ function Filter() {
 
   useEffect(() => {
     dispatch(ticketsActions.executeFilter());
-    dispatch(ticketsActions.executeSort());
+    dispatch(fetchTicketsSort());
   }, [dispatch, checkBoxType]);
 
   return (

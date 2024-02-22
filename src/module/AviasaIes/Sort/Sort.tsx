@@ -9,7 +9,7 @@ import { Paragraph } from "../../../ui/Paragraph/Paragraph";
 import { getEndingTransfer } from "../helpers/getEnding";
 import { useAviasalesDispatch } from "../store/hooks/useAviasalesDispatch";
 import { useAviasalesSelector } from "../store/hooks/useAviasalesSelector";
-import { fakeSetSortedType, loadingTickets, ticketsActions } from "../store/redux/slices/ticketsSlice";
+import { fetchTicketsSort, loadingTickets, ticketsActions } from "../store/redux/slices/ticketsSlice";
 import classes from "./Sort.module.scss";
 import { Spinner } from "../../../ui/Spinner/Spinner";
 
@@ -25,7 +25,7 @@ function Sort() {
 
   useEffect(() => {
     dispatch(ticketsActions.executeFilter());
-    dispatch(ticketsActions.executeSort());
+    dispatch(fetchTicketsSort());
   }, [dispatch, sortedType]);
 
   function renderSegment(segment: ISegment) {
@@ -71,7 +71,7 @@ function Sort() {
         <div className={classes.fideLoader}>
           <Spinner className={classes.ticketsLoader} />
         </div>
-      )
+      );
     }
   }
 
@@ -85,12 +85,7 @@ function Sort() {
     }
 
     return progressivelyLoadedTickets.map((ticket) => (
-      <Card
-        className={ticket.id}
-        key={ticket.id}
-        mode="primary"
-        size="medium"
-      >
+      <Card className={ticket.id} key={ticket.id} mode="primary" size="medium">
         <div className={classes.tickets}>
           <Paragraph className={classes.ticketsPrice} size="medium" mode="success">
             {formatAmount(ticket.price)} P
@@ -106,29 +101,29 @@ function Sort() {
     <div className={classes.aviasalesSort}>
       <div className={classes.aviasalesSortContainer}>
         <Button
-          onClick={() => dispatch(fakeSetSortedType("cheap"))}
+          onClick={() => dispatch(ticketsActions.setSortedType("cheap"))}
           mode="primary"
           wide
           type={sortedType === "cheap" ? "active" : "disabled"}
-          disabled={sortedType === "cheap" || fakeLoading === 'pending'}
+          disabled={sortedType === "cheap" || fakeLoading === "pending"}
         >
           <Paragraph mode="primary">Самый дешевый</Paragraph>
         </Button>
         <Button
-          onClick={() => dispatch(fakeSetSortedType("fast"))}
+          onClick={() => dispatch(ticketsActions.setSortedType("fast"))}
           mode="primary"
           wide
           type={sortedType === "fast" ? "active" : "disabled"}
-          disabled={sortedType === "fast" || fakeLoading === 'pending'}
+          disabled={sortedType === "fast" || fakeLoading === "pending"}
         >
           <Paragraph mode="primary">Самый быстрый</Paragraph>
         </Button>
         <Button
-          onClick={() => dispatch(fakeSetSortedType("optimal"))}
+          onClick={() => dispatch(ticketsActions.setSortedType("optimal"))}
           mode="primary"
           wide
           type={sortedType === "optimal" ? "active" : "disabled"}
-          disabled={sortedType === "optimal" || fakeLoading === 'pending'}
+          disabled={sortedType === "optimal" || fakeLoading === "pending"}
         >
           <Paragraph mode="primary">Оптимальный</Paragraph>
         </Button>
@@ -139,10 +134,10 @@ function Sort() {
         {!error && progressivelyLoadedTickets.length >= 5 && (
           <Button
             onClick={async () => {
-              dispatch(loadingTickets());
               dispatch(ticketsActions.addPosition());
+              await dispatch(loadingTickets());
             }}
-            disabled = {fakeLoading === 'pending'}
+            disabled={fakeLoading === "pending"}
             className={classes.aviasalesLoadTicket}
             mode="primary"
             wide
