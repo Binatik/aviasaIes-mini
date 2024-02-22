@@ -11,6 +11,7 @@ import { useAviasalesSelector } from "./store/hooks/useAviasalesSelector";
 import { Paragraph } from "../../ui/Paragraph/Paragraph";
 import { Spinner } from "../../ui/Spinner/Spinner";
 import classNames from "classnames";
+import { Tickets } from "./Tickets/Tickets";
 
 const api = new Api();
 
@@ -70,7 +71,10 @@ function Aviasales() {
       </div>
       <div className={classes.aviasalesContent}>
         <Filter />
-        <Sort />
+        <div className={classes.aviasales}>
+          <Sort />
+          <Tickets />
+        </div>
       </div>
     </div>
   );

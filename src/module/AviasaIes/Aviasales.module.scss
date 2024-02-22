@@ -20,6 +20,10 @@
     visibility 0.3s;
 }
 
+.aviasales {
+  flex: 1;
+}
+
 @media (min-width: 768px) {
   .aviasalesContent {
     flex-wrap: nowrap;

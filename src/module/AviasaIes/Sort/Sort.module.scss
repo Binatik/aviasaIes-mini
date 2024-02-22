@@ -6,10 +6,6 @@
   padding-left: 10px;
 }
 
-.aviasalesSort {
-  flex: 1;
-}
-
 .aviasalesSortContainer {
   display: flex;
   flex-direction: column;
@@ -19,107 +15,8 @@
   overflow: hidden;
 }
 
-.aviasalesContent {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  padding-top: 20px;
-  gap: 20px;
-}
-
-.tickets {
-  align-self: stretch;
-  align-items: center;
-  gap: 0 20px;
-  justify-content: space-between;
-  display: flex;
-  padding-bottom: 26px;
-}
-
-.fideLoader {
-  position: fixed;
-  // pointer-events: none;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(255, 255, 255, 0.646);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-}
-
-.ticketsLoader {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 0;
-  transform: translate(50%, -50%);
-}
-
-.ticketsPrice {
-  white-space: nowrap;
-}
-
-.segments {
-  display: flex;
-  gap: 10px;
-  justify-content: space-between;
-  align-self: stretch;
-}
-
-.segment {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.segmentType {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1;
-  gap: 1px;
-}
-
-.segmentType .segmentTypeParagraph {
-  font-size: 15px;
-}
-
-.aviasalesLoadTicket {
-  margin-bottom: 30px;
-  border-radius: var(--border-main);
-}
-
-.stops {
-  display: flex;
-  gap: 5px;
-}
-
-.stops .stopParagraph {
-  font-size: 15px;
-}
-
 @media (min-width: 768px) {
   .aviasalesSortContainer {
     flex-direction: row;
-  }
-
-  .segments {
-    flex-direction: column;
-  }
-
-  .segment {
-    flex-direction: row;
-  }
-
-  .segmentType {
-    flex: 1 1 calc(100% / 3 - 20px);
-  }
-}
-
-@media (min-width: 568px) {
-  .ticketsLoader {
-    width: 250px;
   }
 }

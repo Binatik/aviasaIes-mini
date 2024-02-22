@@ -15,7 +15,6 @@
   background-color: var(--base-color);
 }
 
-
 .button.primaryMode:not([disabled]) {
   transition:
     color 0.2s,
@@ -31,7 +30,6 @@
 }
 
 .button.primaryMode.activeType {
-  cursor: default;
   background-color: var(--primary-color);
   color: var(--base-color);
 }
