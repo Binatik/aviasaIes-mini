@@ -74,7 +74,6 @@ const ticketsSlice = createSlice({
     },
 
     setSortedType: (state, action: PayloadAction<ISortedType>) => {
-      console.log('ddd')
       state.sortedType = action.payload;
     },
 
@@ -181,7 +180,7 @@ export const loadingTickets = createAsyncThunk("ticketsSlice/loadingTickets", as
   const position = state.ticketsReducer.position;
   const modifiedTickets = state.ticketsReducer.modifiedTickets;
 
-  const result = await api.fakeEndpoint(5000, modifiedTickets);
+  const result = await api.fakeEndpoint(0, modifiedTickets);
 
   return result.slice(0, position);
 });

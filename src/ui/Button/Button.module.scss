@@ -47,4 +47,14 @@
   .button.primaryMode:not([disabled]):hover p {
     color: var(--default-color);
   }
+
+  .button.primaryMode.activeType:hover {
+    background-color: var(--primary-color);
+    color: var(--base-color);
+  }
+
+  .button.primaryMode.activeType:hover p {
+    background-color: var(--primary-color);
+    color: var(--base-color);
+  }
 }
