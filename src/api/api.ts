@@ -71,6 +71,24 @@ class Api {
 
           resolve(result);
         }
+
+        if (payload === "optimal") {
+          const result = [...modifiedTickets].sort((current, next) => {
+            const priceDiff = current.price - next.price;
+            const durationAdurationCurrent = current.segments[0].duration + current.segments[1].duration;
+            const durationBdurationNext = next.segments[0].duration + next.segments[1].duration;
+
+            const durationDiff = durationAdurationCurrent - durationBdurationNext;
+
+            // Смотрим разницу
+            if (priceDiff >= 0) {
+              return durationDiff;
+            }
+            return priceDiff;
+          });
+
+          resolve(result);
+        }
       }, 0);
     });
   }
