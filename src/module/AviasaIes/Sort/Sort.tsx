@@ -25,7 +25,7 @@ function Sort() {
           mode="primary"
           wide
           type={sortedType === "cheap" ? "active" : "disabled"}
-          disabled={sortedType === "cheap" || fakeLoading === "pending"}
+          disabled={fakeLoading === "pending"}
         >
           <Paragraph mode="primary">Самый дешевый</Paragraph>
         </Button>
@@ -34,7 +34,7 @@ function Sort() {
           mode="primary"
           wide
           type={sortedType === "fast" ? "active" : "disabled"}
-          disabled={sortedType === "fast" || fakeLoading === "pending"}
+          disabled={fakeLoading === "pending"}
         >
           <Paragraph mode="primary">Самый быстрый</Paragraph>
         </Button>
@@ -43,7 +43,7 @@ function Sort() {
           mode="primary"
           wide
           type={sortedType === "optimal" ? "active" : "disabled"}
-          disabled={sortedType === "optimal" || fakeLoading === "pending"}
+          disabled={fakeLoading === "pending"}
         >
           <Paragraph mode="primary">Оптимальный</Paragraph>
         </Button>

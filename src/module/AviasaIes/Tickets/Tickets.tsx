@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { ISegment } from "../../../api/api.types";
 import { formatAmount } from "../../../helpers/formatAmount";
 import { formatTimer } from "../../../helpers/formatTimer";
@@ -77,38 +78,47 @@ function Tickets() {
     }
 
     return progressivelyLoadedTickets.map((ticket) => (
-      <Card className={ticket.id} key={ticket.id} mode="primary" size="medium">
-        <div className={classes.tickets}>
-          <Paragraph className={classes.ticketsPrice} size="medium" mode="success">
-            {formatAmount(ticket.price)} P
-          </Paragraph>
-          <img src={`//pics.avs.io/99/36/${ticket.carrier}.png`} alt={`CompanyLogo ${ticket.carrier}`} />
-        </div>
-        <div className={classes.segments}>{ticket.segments.map((segment) => renderSegment(segment))}</div>
-      </Card>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        key={ticket.id}
+      >
+        <Card mode="primary" size="medium">
+          <div className={classes.tickets}>
+            <Paragraph className={classes.ticketsPrice} size="medium" mode="success">
+              {formatAmount(ticket.price)} P
+            </Paragraph>
+            <img src={`//pics.avs.io/99/36/${ticket.carrier}.png`} alt={`CompanyLogo ${ticket.carrier}`} />
+          </div>
+          <div className={classes.segments}>{ticket.segments.map((segment) => renderSegment(segment))}</div>
+        </Card>
+      </motion.div>
     ));
   }
 
   return (
-    <div className={classes.content}>
-      {renderLoader()}
-      {renderTickets()}
-      {!error && progressivelyLoadedTickets.length >= 5 && (
-        <Button
-          onClick={async () => {
-            dispatch(ticketsActions.addPosition());
-            await dispatch(loadingTickets());
-          }}
-          disabled={fakeLoading === "pending"}
-          type="active"
-          className={classes.loadTickets}
-          mode="primary"
-          wide
-        >
-          <Paragraph mode="primary">Показать еще 5 билетов!</Paragraph>
-        </Button>
-      )}
-    </div>
+    <AnimatePresence>
+      <div className={classes.content}>
+        {renderLoader()}
+        {renderTickets()}
+        {!error && progressivelyLoadedTickets.length >= 5 && (
+          <Button
+            onClick={async () => {
+              dispatch(ticketsActions.addPosition());
+              await dispatch(loadingTickets());
+            }}
+            disabled={fakeLoading === "pending"}
+            type="active"
+            className={classes.loadTickets}
+            mode="primary"
+            wide
+          >
+            <Paragraph mode="primary">Показать еще 5 билетов!</Paragraph>
+          </Button>
+        )}
+      </div>
+    </AnimatePresence>
   );
 }
 

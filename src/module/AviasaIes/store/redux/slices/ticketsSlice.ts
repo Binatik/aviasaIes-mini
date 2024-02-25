@@ -74,6 +74,7 @@ const ticketsSlice = createSlice({
     },
 
     setSortedType: (state, action: PayloadAction<ISortedType>) => {
+      console.log('ddd')
       state.sortedType = action.payload;
     },
 
@@ -175,14 +176,12 @@ export const fetchNewTickets = createAsyncThunk("ticketsSlice/fetchNewTickets", 
 });
 
 export const loadingTickets = createAsyncThunk("ticketsSlice/loadingTickets", async (_, { getState }) => {
-  //randomDelay не чистая затея с функцией но тут это для примера работы fakeData.
-  const randomDelay = Math.random() * 50 + 150;
   const state = getState() as RootState;
 
   const position = state.ticketsReducer.position;
   const modifiedTickets = state.ticketsReducer.modifiedTickets;
 
-  const result = await api.fakeEndpoint(randomDelay, modifiedTickets);
+  const result = await api.fakeEndpoint(5000, modifiedTickets);
 
   return result.slice(0, position);
 });
